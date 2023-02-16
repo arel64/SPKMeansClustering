@@ -7,16 +7,14 @@
 #define JACOBI "jacobi"
 
 
-cluster_point *data_points = NULL;
-linked_list file_data;
-
 int main(int argc, char **argv)
 {
+    linked_list file_data;
     context c = {0,0,0};
     char *goal,*file_name;
     unsigned int status;
     FILE* file;
-    cluster_point* data_points;
+    point* data_points;
 
     /*
         Validate Arguments
@@ -54,7 +52,7 @@ int main(int argc, char **argv)
     }
     else
     {
-        data_points = (cluster_point *)malloc(sizeof(cluster_point) * c.datapoint_count);
+        data_points = (point *)malloc(sizeof(point) * c.datapoint_count);
         if (data_points == NULL )
         {
             ERROR_AND_EXIT();

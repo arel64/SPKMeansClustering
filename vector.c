@@ -26,7 +26,7 @@ void vector_sum_into_vector(const context*const c,point *sumInto, const point*co
 {
 	vector_each_cell(c,sumInto,sumInto,sumFrom,0,ADD_VECTOR);
 }
-void vector_multipy_vector_by_scalar   (const context*const c ,const point *vec, double scalar)
+void vector_multipy_vector_by_scalar   (const context*const c ,point *vec, double scalar)
 {
 	vector_each_cell(c,vec,NULL,NULL,scalar,MULTIPLY_SCALAR);
 }
@@ -36,8 +36,8 @@ void vector_copyinto_vector(const context*const c,point *copyInto, const point*c
 }
 void vector_each_cell(const context*const c,vector* into,const vector *const left,const vector *const right,const double scalar,unsigned how)
 {
-    size_t i = 0 , j = 0;
-    size_t n = c->datapoint_size;
+    size_t i = 0;
+    size_t n = c->datapoint_count;
     
     if(into == NULL) return;
 
@@ -49,7 +49,7 @@ void vector_each_cell(const context*const c,vector* into,const vector *const lef
 			(*into)[i] = (*left)[i] + (*right)[i];
 			break;
 		case MULTIPLY_SCALAR:
-			(*into)[i] = (*into)[i] * scalar;
+			(*into)[i] = (*left)[i] * scalar;
 			break;
 		case COPYINTO_VECTOR:
 			(*into)[i] = (*left)[i];
@@ -62,17 +62,13 @@ void vector_each_cell(const context*const c,vector* into,const vector *const lef
 }
 void vec_destroy_c(const context*const c,vector *vecArr)
 {
-	vec_destroy(vecArr,c->datapoint_size);
+	vec_destroy(vecArr,c->datapoint_count);
 }
 void vec_destroy(vector *vecArr, unsigned int k)
 {
+	size_t j = 0;
 	if(vecArr == NULL)
 		return;
-	size_t j = 0;
-	if (vecArr == NULL)
-	{
-		return;
-	}
 	for (; j < k; j++)
 	{
 		free(vecArr[j]);

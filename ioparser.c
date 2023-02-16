@@ -12,7 +12,7 @@ int ioparser_parse_file_linked_list(context* c,linked_list *l, FILE *stream)
 		{
 			return 1;
 		}
-		strlcpy(temp, datapoint_line,nread);
+		strncpy(temp, datapoint_line,nread);
 		if (!list_insert_key(l, temp))
 		{
 			free(temp);
@@ -25,7 +25,8 @@ int ioparser_parse_file_linked_list(context* c,linked_list *l, FILE *stream)
     c->datapoint_count = lines_read;
 	return 0;
 }
-int ioparser_parse_data_points(const context*const c,linked_list *l , cluster_point *data)
+
+int ioparser_parse_data_points(const context*const c,linked_list *l , point *data)
 {
 	double *temp;
     size_t lines_parsed = 0;
@@ -38,8 +39,7 @@ int ioparser_parse_data_points(const context*const c,linked_list *l , cluster_po
 		{
 			return lines_parsed;
 		}
-		data->point = temp;
-		data->belong = 0;
+		data = &temp;
 		data++;
 		iter = iter->next;
         lines_parsed++;

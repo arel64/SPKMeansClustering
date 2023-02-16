@@ -1,16 +1,13 @@
 #include "matrix.h"
-void    matrix_each_cell(const context*const ,matrix* into,const matrix *const left,const matrix *const right,const double scalar,unsigned how);
-double  matrix_sum_axis(const context*const c,const matrix*const m,const unsigned vector_num,const unsigned axis);
+void    matrix_each_cell(matrix* into,const matrix *const left,const matrix *const right,const double scalar,unsigned how);
+double  matrix_sum_axis(const matrix*const m,const unsigned vector_num,const unsigned axis);
 
 
-matrix* matrix_create(const context*const c)
+matrix* matrix_create(const unsigned row,const unsigned col)
 {
     matrix* ret;
     double* alloc;
-    size_t i = 0;
-    unsigned n = c->datapoint_size;
-
-    alloc = (double*)malloc(sizeof(double)*n*n);
+    alloc = (double*)malloc(sizeof(double)*row*col);
     if(alloc == NULL)
     {
         return NULL;
@@ -20,61 +17,61 @@ matrix* matrix_create(const context*const c)
     {
         return NULL;
     }
-    *ret = &alloc;
+    ret->col = col;
+    ret->row = row;
+    ret->matrix = &alloc;
    
     return ret;
 }
-matrix* matrix_add(const context*const c,const matrix *const left, const matrix*const right)
+matrix* matrix_add(const matrix *const left, const matrix*const right)
 {
-    matrix* ret = matrix_create(c);
-    matrix_each_cell(c,ret,left,right,0,ADD_MATRIX);
+    matrix* ret = matrix_create(left->row,right->col);
+    matrix_each_cell(ret,left,right,0,ADD_MATRIX);
     return ret;
 }
-matrix* matrix_subtract(const context*const c,const matrix *const left, const matrix*const right)
+matrix* matrix_subtract(const matrix *const left, const matrix*const right)
 {
-    matrix* ret = matrix_create(c);
-    matrix_each_cell(c,ret,left,right,0,SUBTRACT_MATRIX);
+    matrix* ret = matrix_create(left->row,left->col);
+    matrix_each_cell(ret,left,right,0,SUBTRACT_MATRIX);
     return ret;
 }
-matrix* matrix_multiply(const context*const c,const matrix *const left, const matrix*const right)
+matrix* matrix_multiply(const matrix *const left, const matrix*const right)
 {
-    matrix* ret = matrix_create(c);
-    matrix_each_cell(c,ret,left,right,0,MULTIPLY_MATRIX);
+    matrix* ret = matrix_create(left->row,right->col);
+    matrix_each_cell(ret,left,right,0,MULTIPLY_MATRIX);
     return ret;
 }
-matrix* matrix_multiply_scalar(const context*const c,const matrix *const,double)
+matrix* matrix_multiply_scalar(const matrix *const m,double scalar)
 {
-    matrix* ret = matrix_create(c);
-    matrix_each_cell(c,ret,NULL,NULL,0,MULTIPLY_SCALAR);
+    matrix* ret = matrix_create(m->row,m->col);
+    matrix_each_cell(ret,m,NULL,scalar,MULTIPLY_SCALAR);
     return ret;
 }
-void matrix_each_cell(const context*const c,matrix* into,const matrix *const left,const matrix *const right,const double scalar,unsigned how)
+void matrix_each_cell(matrix* into,const matrix *const left,const matrix *const right,const double scalar,unsigned how)
 {
     size_t i = 0 , j = 0;
-    size_t n = c->datapoint_count;
-    
     if(into == NULL) return;
 
-    for(;i<n;i++)
+    for(;i<into->row;i++)
     {
-        for(;j<n;j++)
+        for(;j<into->row;j++)
         {
             switch (how)
             {
             case ADD_MATRIX:
-                (*into)[i][j] = (*left)[i][j] + (*right)[i][j];
+                into->matrix[i][j] = left->matrix[i][j] + right->matrix[i][j];
                 break;
             case SUBTRACT_MATRIX:
-                (*into)[i][j] = (*left)[i][j] - (*right)[i][j];
+                into->matrix[i][j] = left->matrix[i][j] - right->matrix[i][j];
                 break;
             case MULTIPLY_SCALAR_MATRIX:
-                (*into)[i][j] = (*into)[i][j] * scalar;
+                into->matrix[i][j] = into->matrix[i][j] * scalar;
                 break;
             case COPYINTO_MATRIX:
-                (*into)[i][j] = (*left)[i][j];
+                into->matrix[i][j] = left->matrix[i][j];
                 break;
             case MULTIPLY_MATRIX:
-                (*into)[i][j] = matrix_sum_row(c,left,i) * matrix_sum_col(c,right,j);
+                into->matrix[i][j] = matrix_sum_row(left,i) * matrix_sum_col(right,j);
                 break;
             default:
                 return;
@@ -83,31 +80,31 @@ void matrix_each_cell(const context*const c,matrix* into,const matrix *const lef
         }
     }
 }
-void    matrix_copyinto_matrix(const context*const c,matrix *copyInto, const matrix*const copyFrom)
+void matrix_copyinto_matrix(matrix *copyInto, const matrix*const copyFrom)
 {
-    matrix_each_cell(c,copyInto,copyFrom,NULL,0,COPYINTO_MATRIX);
+    matrix_each_cell(copyInto,copyFrom,NULL,0,COPYINTO_MATRIX);
 }
-double  matrix_sum_row(const context*const c,const matrix*const m,const unsigned row)
+double  matrix_sum_row(const matrix*const m,const unsigned row)
 {
-    return matrix_sum_axis(c,m,row,0);
+    return matrix_sum_axis(m,row,0);
 }
-double  matrix_sum_col(const context*const c,const matrix*const m,const unsigned col)
+double  matrix_sum_col(const matrix*const m,const unsigned col)
 {
-    return matrix_sum_axis(c,m,col,1);
+    return matrix_sum_axis(m,col,1);
 }
-double  matrix_sum_axis(const context*const c,const matrix*const m,const unsigned vector_num,const unsigned axis)
+double  matrix_sum_axis(const matrix*const m,const unsigned vector_num,const unsigned axis)
 {
     size_t i=0;
     double count = 0;
-    for(;i<c->datapoint_size;i++)
+    for(;i<axis==0?m->col:m->row;i++)
     {
         if(axis==0)
         {
-            count += (*m)[vector_num][i];
+            count += m->matrix[vector_num][i];
         }
         else
         {
-            count += (*m)[i][vector_num];
+            count += m->matrix[i][vector_num];
         }
         
     }

@@ -9,5 +9,5 @@
 		"vector.h": "c",
 		"cluster_point.h": "c",
 		"context.h": "c"
-	}
+	},
 }
