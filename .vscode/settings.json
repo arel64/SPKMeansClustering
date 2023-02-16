@@ -1,5 +1,13 @@
 {
 	"files.associations": {
-		"spkmeans.h": "c"
+		"spkmeans.h": "c",
+		"spkmeansmodule.h": "c",
+		"linkedlist.h": "c",
+		"point.h": "c",
+		"random": "c",
+		"linked_list.h": "c",
+		"vector.h": "c",
+		"cluster_point.h": "c",
+		"context.h": "c"
 	}
 }

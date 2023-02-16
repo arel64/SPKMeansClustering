@@ -1,45 +1,66 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include "spkmeans.h"
+static PyObject *Spkmeansmodule_spk(PyObject *self, PyObject *args)
+{
+	
+	return NULL;
+}
+static PyObject *Spkmeansmodule_wam(PyObject *self, PyObject *args)
+{
+	return NULL;
+}
+static PyObject *Spkmeansmodule_ddg(PyObject *self, PyObject *args)
+{
+	return NULL;
+}
+static PyObject *Spkmeansmodule_gl(PyObject *self, PyObject *args)
+{
+	return NULL;
+}
+static PyObject *Spkmeansmodule_jacobi(PyObject *self, PyObject *args)
+{
+	return NULL;
+}
 
 // module's function table
 static PyMethodDef Spkmeans_FunctionsTable[] = {
 	{
-		"spk",																									   // name exposed to Python
-		(PyCFunction)Spkmeansmodule_spk,																		   // C wrapper function
-		METH_VARARGS,																							   // received variable args (but really just 1)
-		"passing the initial centroids, the datapoints and other arguments if needed, and get the final centroids" // documentation
-	},
-	{"wam",							  // name exposed to Python
-	 (PyCFunction)Spkmeansmodule_wam, // C wrapper function
-	 METH_VARARGS,					  // received variable args (but really just 1)
-	 "passing the datapoints, and get weighted
-	 adj matrix " // documentation
-	},
-	{"ddg",							  // name exposed to Python
-	 (PyCFunction)Spkmeansmodule_ddg, // C wrapper function
-	 METH_VARARGS,					  // received variable args (but really just 1)
-	 "passing the datapoints, and get diagonal
-	 degree matrix " // documentation
-	},
-	{"gl",							 // name exposed to Python
-	 (PyCFunction)Spkmeansmodule_gl, // C wrapper function
-	 METH_VARARGS,					 // received variable args (but really just 1)
-	 "passing the datapoints, and get graph
-	 Laplacian matrix." // documentation
+		"spk",																									   
+		(PyCFunction)Spkmeansmodule_spk,																		   
+		METH_VARARGS,																							   
+		"passing the initial centroids, the datapoints and other arguments if needed, and get the final centroids" 
 	},
 	{
-		"jacobi",																								   // name exposed to Python
-		(PyCFunction)Spkmeansmodule_jacobi,																		   // C wrapper function
-		METH_VARARGS,																							   // received variable args (but really just 1)
-		"passing the initial centroids, the datapoints and other arguments if needed, and get the final centroids" // documentation
+		"wam",							  
+		(PyCFunction)Spkmeansmodule_wam, 
+		METH_VARARGS,					  
+		"passing the datapoints, and get weighted adj matrix " 
 	},
-	{NULL, NULL, 0, NULL}};
-
+	{
+		"ddg",							  
+		(PyCFunction)Spkmeansmodule_ddg, 
+		METH_VARARGS,					  
+		"passing the datapoints, and get diagonal degree matrix " 
+	},
+	{
+		"gl",							 
+		(PyCFunction)Spkmeansmodule_gl, 
+		METH_VARARGS,					 
+		"passing the datapoints, and get graph Laplacian matrix." 
+	},
+	{
+		"jacobi",																								   
+		(PyCFunction)Spkmeansmodule_jacobi,																		   
+		METH_VARARGS,																							   
+		"passing the matrix, and get the eigenvalues and eigenvectors" 
+	},
+	{NULL, NULL, 0, NULL}
+	};
 // modules definition
 static struct PyModuleDef Spkmeans_Module = {
 	PyModuleDef_HEAD_INIT,
-	"spkmeans",												   // name of module exposed to Python
+	"mykmeanssp",												   // name of module exposed to Python
 	"Spkmeans Python wrapper for custom C extension library.", // module documentation
 	-1,
 	Spkmeans_FunctionsTable};
