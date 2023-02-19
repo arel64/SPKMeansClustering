@@ -5,23 +5,21 @@ double  matrix_sum_axis(const matrix*const m,const unsigned vector_num,const uns
 
 matrix* matrix_create(const unsigned row,const unsigned col)
 {
-    matrix* ret;
-    double* alloc;
-    alloc = (double*)malloc(sizeof(double)*row*col);
-    if(alloc == NULL)
-    {
-        return NULL;
-    }
-    ret = (matrix*)malloc(sizeof(matrix));
-    if(ret == NULL)
+    unsigned i = 0;
+    double* alloc = NULL;
+    matrix* ret = (matrix*) malloc(sizeof(matrix));
+    if(row==0 || col==0 || ret ==NULL)
     {
         return NULL;
     }
     ret->col = col;
     ret->row = row;
-    ret->matrix = &alloc;
-   
-    return ret;
+
+    alloc = (double*)malloc(row*col* sizeof(double));
+    ret->matrix = (double**)malloc(row * sizeof(double *));
+    for(;i < row; i++) 
+        ret->matrix[i] = alloc + col*i;
+    return  ret;
 }
 matrix* matrix_add(const matrix *const left, const matrix*const right)
 {
@@ -38,14 +36,29 @@ matrix* matrix_subtract(const matrix *const left, const matrix*const right)
 matrix* matrix_multiply(const matrix *const left, const matrix*const right)
 {
     matrix* ret = matrix_create(left->row,right->col);
-    matrix_each_cell(ret,left,right,0,MULTIPLY_MATRIX);
+    unsigned i = 0 , j = 0 , k = 0;
+    if(ret == NULL) return NULL;
+
+    for(;i<ret->row;i++)
+    {
+        for(j=0;j<ret->col;j++)
+        {
+            for (k = 0; k < right->row; k++) {
+                ret->matrix[i][j] += left->matrix[i][k] * right->matrix[k][j];
+            }
+        }
+    }
     return ret;
 }
 matrix* matrix_multiply_scalar(const matrix *const m,double scalar)
 {
     matrix* ret = matrix_create(m->row,m->col);
-    matrix_each_cell(ret,m,NULL,scalar,MULTIPLY_SCALAR);
+    matrix_each_cell(ret,m,NULL,scalar,MULTIPLY_SCALAR_MATRIX);
     return ret;
+}
+void matrix_zerofill(matrix * m)
+{
+    matrix_each_cell(m, NULL, NULL, 0,ZEROFILL_MATRIX);
 }
 void matrix_each_cell(matrix* into,const matrix *const left,const matrix *const right,const double scalar,unsigned how)
 {
@@ -54,7 +67,7 @@ void matrix_each_cell(matrix* into,const matrix *const left,const matrix *const 
 
     for(;i<into->row;i++)
     {
-        for(;j<into->row;j++)
+        for(j=0;j<into->col;j++)
         {
             switch (how)
             {
@@ -65,14 +78,24 @@ void matrix_each_cell(matrix* into,const matrix *const left,const matrix *const 
                 into->matrix[i][j] = left->matrix[i][j] - right->matrix[i][j];
                 break;
             case MULTIPLY_SCALAR_MATRIX:
-                into->matrix[i][j] = into->matrix[i][j] * scalar;
+                into->matrix[i][j] = left->matrix[i][j] * scalar;
                 break;
             case COPYINTO_MATRIX:
                 into->matrix[i][j] = left->matrix[i][j];
                 break;
-            case MULTIPLY_MATRIX:
-                into->matrix[i][j] = matrix_sum_row(left,i) * matrix_sum_col(right,j);
+            case ZEROFILL_MATRIX:
+                into->matrix[i][j] = 0;
                 break;
+            case PRINT_MATRIX:
+                printf("%.4f", into->matrix[i][j]);
+                if (j != into->col - 1)
+                {
+                    printf(",");
+                }
+                else
+                {
+                    printf("\n");
+                }
             default:
                 return;
                 break;
@@ -80,7 +103,7 @@ void matrix_each_cell(matrix* into,const matrix *const left,const matrix *const 
         }
     }
 }
-void matrix_copyinto_matrix(matrix *copyInto, const matrix*const copyFrom)
+void    matrix_copyinto_matrix(matrix *copyInto, const matrix*const copyFrom)
 {
     matrix_each_cell(copyInto,copyFrom,NULL,0,COPYINTO_MATRIX);
 }
@@ -96,7 +119,8 @@ double  matrix_sum_axis(const matrix*const m,const unsigned vector_num,const uns
 {
     size_t i=0;
     double count = 0;
-    for(;i<axis==0?m->col:m->row;i++)
+    double end =(axis==0)?m->col:m->row;
+    for(;i<end;i++)
     {
         if(axis==0)
         {
@@ -110,7 +134,13 @@ double  matrix_sum_axis(const matrix*const m,const unsigned vector_num,const uns
     }
     return count;
 }
+void    matrix_print(matrix* m)
+{
+    matrix_each_cell(m, NULL, NULL, 0,PRINT_MATRIX);
+}
 void    matrix_destroy(matrix* m)
 {
+    free(m->matrix[0]);
+    free(m->matrix);
     free(m);
 }

@@ -1,10 +1,10 @@
 #include "spkmeans.h"
-#define WAM_FORMULA(c,x,y) (exp(-0.5*vector_euclidean_distance(c,x,y)))
+#define WAM_FORMULA(x,y,dim) (exp(-0.5*vector_euclidean_distance(x,y,dim)))
 matrix* spkmeans_wam(const  context*const c,const point* const data_points)
 {
     size_t i=0,j=0;
     size_t n=c->datapoint_count;
-    matrix* ret = matrix_create(c);
+    matrix* ret = matrix_create(c->datapoint_count,c->datapoint_count);
     if(ret==NULL)
     {
         return NULL;
@@ -15,17 +15,39 @@ matrix* spkmeans_wam(const  context*const c,const point* const data_points)
         {
             if(i==j)
             {
-                (*ret)[i][j] = 0;
+                ret->matrix[i][j] = 0;
             }
             else if(i<j)
             {
-                (*ret)[i][j] = WAM_FORMULA(c,&data_points[i],&data_points[j]);
+                ret->matrix[i][j] = WAM_FORMULA(data_points[i],data_points[j],c->dimention);
             }
             else
             {
-                (*ret)[i][j] =  (*ret)[j][i];
+                ret->matrix[i][j] =  ret->matrix[j][i];
             }
         }
     }
     return ret;
+}
+
+matrix* spkmeans_ddg(const matrix* const wam)
+{
+    size_t i=0;
+    unsigned size = wam->row;
+    matrix* ret = matrix_create(size,size);
+    if(ret==NULL)
+    {
+        return NULL;
+    }
+    matrix_zerofill(ret);
+    for(;i<size;i++)
+    {
+        ret->matrix[i][i] =  matrix_sum_row(wam,i);
+        
+    }
+    return ret;
+}
+matrix* spkmeans_lp(const matrix* const wam,const matrix* const ddg)
+{
+    return matrix_subtract(ddg, wam);
 }

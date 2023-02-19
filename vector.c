@@ -1,43 +1,53 @@
 #include "vector.h"
 
-int vector_init_arr(const context*const c,point* arr){
+int vector_init_arr(point* arr, const unsigned k,const unsigned dim){
 	size_t i;
-	for (i = 0; i < c->cluster_count; i++)
+	for (i = 0; i < k; i++)
 	{
-		arr[i] = (double *)calloc(c->dimention, sizeof(double));
+		arr[i] = (double *)calloc(dim, sizeof(double));
 		if (arr[i] == NULL)
 		{
 			return i;
 		}
 	}
-	return c->cluster_count;
+	return k;
 }
-double  vector_euclidean_distance(const context*const c,const point * a, const point*b)
+double  vector_euclidean_distance(const point  a, const point b, const unsigned dim)
 {
     double sum = 0;
 	size_t i = 0;
-	for (; i < c->dimention; i++)
+	for (; i < dim; i++)
 	{
 		sum += pow((a[i] - b[i]), 2);
 	}
 	return sqrt(sum);
 }
-void vector_sum_into_vector(const context*const c,point *sumInto, const point*const sumFrom)
+void vector_sum_into_vector(point *sumInto, const point*const sumFrom, const unsigned n)
 {
-	vector_each_cell(c,sumInto,sumInto,sumFrom,0,ADD_VECTOR);
+	vector_each_cell(sumInto,sumInto,sumFrom,0,ADD_VECTOR,n);
 }
-void vector_multipy_vector_by_scalar   (const context*const c ,point *vec, double scalar)
+void vector_multipy_vector_by_scalar   (point *vec, double scalar, const unsigned n)
 {
-	vector_each_cell(c,vec,NULL,NULL,scalar,MULTIPLY_SCALAR);
+	vector_each_cell(vec,NULL,NULL,scalar,MULTIPLY_SCALAR,n);
 }
-void vector_copyinto_vector(const context*const c,point *copyInto, const point*const copyFrom)
+double  vector_multiply (vector* vector_row,vector* vector_col, const unsigned dim)
 {
-	vector_each_cell(c,copyInto,copyFrom,NULL,0,COPYINTO_VECTOR);
+	size_t i = 0;
+	unsigned sum = 0;
+	for (; i < dim; i++)
+	{
+		sum += (*vector_row)[i] * (*vector_col)[i];
+	}
+	return sum;
 }
-void vector_each_cell(const context*const c,vector* into,const vector *const left,const vector *const right,const double scalar,unsigned how)
+
+void vector_copyinto_vector(point *copyInto, const point*const copyFrom, const unsigned n)
+{
+	vector_each_cell(copyInto,copyFrom,NULL,0,COPYINTO_VECTOR,n);
+}
+void vector_each_cell(vector* into,const vector *const left,const vector *const right,const double scalar,unsigned how, const unsigned n)
 {
     size_t i = 0;
-    size_t n = c->datapoint_count;
     
     if(into == NULL) return;
 
@@ -60,11 +70,7 @@ void vector_each_cell(const context*const c,vector* into,const vector *const lef
 		}
     }
 }
-void vec_destroy_c(const context*const c,vector *vecArr)
-{
-	vec_destroy(vecArr,c->datapoint_count);
-}
-void vec_destroy(vector *vecArr, unsigned int k)
+void vector_destroy(vector *vecArr, unsigned int k)
 {
 	size_t j = 0;
 	if(vecArr == NULL)
