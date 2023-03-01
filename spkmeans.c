@@ -1,5 +1,5 @@
 #include "spkmeans.h"
-#define WAM_FORMULA(x,y,dim) (exp(-0.5*vector_euclidean_distance(x,y,dim)))
+#define WAM_FORMULA(x,y,dim) (exp(-0.5*pow(vector_euclidean_distance(x,y,dim),2)))
 matrix* spkmeans_wam(const  context*const c,const point* const data_points)
 {
     size_t i=0,j=0;
@@ -17,7 +17,10 @@ matrix* spkmeans_wam(const  context*const c,const point* const data_points)
             {
                 ret->matrix[i][j] = 0;
             }
-            else if(i<j)
+            else if(i<j) 
+            /*
+             May be problematic because the else part can be excuted prior to the else if part.
+            */
             {
                 ret->matrix[i][j] = WAM_FORMULA(data_points[i],data_points[j],c->dimention);
             }
@@ -47,7 +50,7 @@ matrix* spkmeans_ddg(const matrix* const wam)
     }
     return ret;
 }
-matrix* spkmeans_lp(const matrix* const wam,const matrix* const ddg)
+matrix* spkmeans_gl(const matrix* const wam,const matrix* const ddg)
 {
     return matrix_subtract(ddg, wam);
 }

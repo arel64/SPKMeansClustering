@@ -6,6 +6,9 @@ int ioparser_parse_file_linked_list(context* c,linked_list *l, FILE *stream)
 	size_t length = 0;
 	ssize_t nread;
 	while ((nread = getline(&datapoint_line, &length, stream)) != EOF)
+	/*
+	Arel let me know what's the difference between length and nread when you'll see this.
+	*/
 	{
 		char *temp = (char *)malloc(sizeof(char) * nread);
 		if (temp == NULL)
@@ -21,7 +24,7 @@ int ioparser_parse_file_linked_list(context* c,linked_list *l, FILE *stream)
 		lines_read++;
 	}
 	free(datapoint_line);
-    /* CONTEXT UPDATE */
+    c->dimention = ioparser_get_dimention(l->head->key);
     c->datapoint_count = lines_read;
 	return 0;
 }
@@ -80,4 +83,16 @@ void ioparser_print_final_centroids(const context*const c,const centroid * final
 		}
 		printf("\n");
 	}
+}
+
+int ioparser_get_dimention(const char* unparsed_line){
+	int i = 0;
+	int count = 0; /*counting of the char ',' in the given string.*/
+	while(*(unparsed_line + i) != EOF)
+	{
+		if(*(unparsed_line + i) == ',')
+			count++;
+		i++;
+	}
+	return count + 1;
 }

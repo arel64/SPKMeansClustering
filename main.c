@@ -22,13 +22,13 @@ int main(int argc, char **argv)
     /*
         Validate Arguments
     */
-    if (argc != 3)
+    if (argc != 3) /*There is no need for input validation in this assignment Arel, don't waste too much time on it.*/
 	{
 		ERROR_AND_EXIT();	
 	}
-    list_init(&file_data);
-    goal = argv[0];
-    file_name = argv[1];
+    list_init(&file_data); /* Shouldn't we first alloc space for the file_data on the heap?*/
+    goal = argv[1]; /*Increased both parameters by 1, I belive it should be this way.*/
+    file_name = argv[2];
 
 
     /*
@@ -47,8 +47,10 @@ int main(int argc, char **argv)
 	if (ioparser_parse_file_linked_list(&c,&file_data, file))
 	{
         list_destroy(&file_data);
+        fclose(file);
         ERROR_AND_EXIT();	
 	}
+    fclose(file);
     data_vecs = (vector *)malloc(sizeof(vector) * c.datapoint_count);
     if (data_vecs == NULL )
     {
@@ -56,8 +58,8 @@ int main(int argc, char **argv)
         ERROR_AND_EXIT();
     }
     
-    list_reverse(&file_data);
-    status = ioparser_parse_data_points(&c,&file_data,data_vecs);
+    list_reverse(&file_data); /*Not sure I understand why line reversal is necessary, Think it probably reverses data_vecs order too.*/
+    status = ioparser_parse_data_points(&c,&file_data,data_vecs); 
     list_destroy(&file_data);
     if(status != c.datapoint_count)
     {
@@ -102,7 +104,7 @@ int main(int argc, char **argv)
             matrix_destroy(ddg);
             return 0;
         }
-        gl = spkmeans_lp(wam,ddg);
+        gl = spkmeans_gl(wam,ddg);
         matrix_destroy(wam);
         matrix_destroy(ddg);
         wam = NULL;

@@ -60,7 +60,7 @@ static PyMethodDef Spkmeans_FunctionsTable[] = {
 // modules definition
 static struct PyModuleDef Spkmeans_Module = {
 	PyModuleDef_HEAD_INIT,
-	"mykmeanssp",												   // name of module exposed to Python
+	"mykmeanssp",												// name of module exposed to Python
 	"Spkmeans Python wrapper for custom C extension library.", // module documentation
 	-1,
 	Spkmeans_FunctionsTable};

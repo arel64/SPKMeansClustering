@@ -5,5 +5,5 @@
 
 matrix* spkmeans_wam(const  context*const,const point* const data_points);
 matrix* spkmeans_ddg(const matrix* const m);
-matrix* spkmeans_lp(const matrix* const wam,const matrix* const ddg);
+matrix* spkmeans_gl(const matrix* const wam,const matrix* const ddg);
 #endif

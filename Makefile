@@ -4,8 +4,8 @@ TARGET_EXEC_TEST := TESTspkmeans
 EXES = $(TARGET_EXEC_MAIN) $(TARGET_EXEC_TEST)
 
 BUILD_DIR := ./build
-SRC_DIRS_MAIN := ./ /usr/include/python3.10
-SRC_DIRS_TEST := $(SRC_DIRS_MAIN) ./test
+SRC_DIRS_MAIN := ./ /usr/include/python3.7
+SRC_DIRS_TEST := $(SRC_DIRS_MAIN) ./tests
 
 CFLAGS := -ansi -Wall -Wextra -Werror -pedantic-errors -g
 # Find all the C and C++ files we want to compile
@@ -37,8 +37,8 @@ LDFLAGS_TEST := $(INC_FLAGS_TEST) -MMD -MP -lm -lcunit
 
 all: $(EXES)
 # The final build step.
-$(EXES): $(OBJS_TEST)
-	$(CC) $(OBJS_TEST) -o $@ $(LDFLAGS_TEST)
+$(EXES): $(OBJS_MAIN)
+	$(CC) $(OBJS_MAIN) -o $@ $(LDFLAGS_TEST)
 # Build step for C source
 $(BUILD_DIR)/%.c.o: %.c
 	mkdir -p $(dir $@)
