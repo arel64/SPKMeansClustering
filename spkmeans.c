@@ -11,16 +11,13 @@ matrix* spkmeans_wam(const  context*const c,const point* const data_points)
     }
     for(;i<n;i++)
     {
-        for(;j<n;j++)
+        for(j = 0;j<n;j++)
         {
             if(i==j)
             {
                 ret->matrix[i][j] = 0;
             }
             else if(i<j) 
-            /*
-             May be problematic because the else part can be excuted prior to the else if part.
-            */
             {
                 ret->matrix[i][j] = WAM_FORMULA(data_points[i],data_points[j],c->dimention);
             }
