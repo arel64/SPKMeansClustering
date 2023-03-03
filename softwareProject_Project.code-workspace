@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../323012971_206530461_assignment2"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"spkmeans.h": "c",
+			"spkmeansmodule.h": "c",
+			"linkedlist.h": "c",
+			"point.h": "c",
+			"random": "c",
+			"linked_list.h": "c",
+			"vector.h": "c",
+			"cluster_point.h": "c",
+			"context.h": "c",
+			"string_view": "c",
+			"system_error": "c",
+			"ioparser.h": "c",
+			"matrix.h": "c"
+		}
+	}
+}

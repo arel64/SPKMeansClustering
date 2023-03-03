@@ -63,7 +63,7 @@ void matrix_zerofill(matrix * m)
 void matrix_each_cell(matrix* into,const matrix *const left,const matrix *const right,const double scalar, int* const ret_loc, double* ret_scalar, unsigned how)
 {
     size_t i = 0 , j = 0;
-    double max_off_diag = -DBL_MAX;
+    double max_off_diag = -1;
 
     if(into == NULL) return;
 
@@ -104,9 +104,9 @@ void matrix_each_cell(matrix* into,const matrix *const left,const matrix *const 
                     {
                         j = i;
                     }
-                    else if(into->matrix[i][j] > max_off_diag)
+                    else if(fabs(into->matrix[i][j]) > max_off_diag)
                     {
-                        max_off_diag = into->matrix[i][j];
+                        max_off_diag = fabs(into->matrix[i][j]);
                         *ret_loc = i;
                         *(ret_loc + 1) = j;
                     }

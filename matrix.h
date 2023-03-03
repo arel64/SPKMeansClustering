@@ -14,7 +14,6 @@
 #include "context.h"
 #include "vector.h"
 #include "stdio.h"
-#include <float.h>
 #include <stdbool.h>
 #include <math.h>
 typedef struct{
