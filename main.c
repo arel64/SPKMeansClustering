@@ -68,12 +68,18 @@ int main(int argc, char **argv)
     }
     if(strcmp(goal,JACOBI) == 0)
     {
+        matrix* jacobi_returned_matrices[2];/* The returned matrices, first component is a row vector of the eigenvalues, 
+        second is the matrix of which vectors are the corresponding eigenvectors.*/
+        jacobi = (matrix*) malloc(sizeof(matrix));
         jacobi->matrix = data_vecs;
         jacobi->col = c.datapoint_count;
         jacobi->row = c.datapoint_count;
-        /* Add Jacobi call Temp error*/
-        ERROR_AND_EXIT();	
-
+        spkmeans_jacobi(jacobi, jacobi_returned_matrices);
+        matrix_print(jacobi_returned_matrices[0]);
+        matrix_print(jacobi_returned_matrices[1]);
+        matrix_destroy(jacobi_returned_matrices[0]);
+        matrix_destroy(jacobi_returned_matrices[1]);
+        return 0;
     }
     else
     {

@@ -28,7 +28,7 @@ void vector_sum_into_vector(point *sumInto, const point*const sumFrom, const uns
 }
 void vector_multipy_vector_by_scalar   (point *vec, double scalar, const unsigned n)
 {
-	vector_each_cell(vec,NULL,NULL,scalar,MULTIPLY_SCALAR,n);
+	vector_each_cell(vec,vec,NULL,scalar,MULTIPLY_SCALAR,n);
 }
 double  vector_multiply (vector* vector_row,vector* vector_col, const unsigned dim)
 {
