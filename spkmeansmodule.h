@@ -5,6 +5,10 @@
 #include "spkmeans.h"
 #include "context.h"
 
+#define WAM 101
+#define DDG 201
+#define JACOBI 601
+
 static PyObject *spkmeansmodule_spk(PyObject *self, PyObject *args);
 static PyObject *spkmeansmodule_wam(PyObject *self, PyObject *args);
 static PyObject *spkmeansmodule_ddg(PyObject *self, PyObject *args);

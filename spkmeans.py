@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import csv
 import sys
 from enum import Enum
@@ -8,13 +9,11 @@ ERROR_MESSAGE = "An Error Has Occurred"
 ARGV_LEN = len(sys.argv)
 MAX_ARGV = 3
 MIN_ARGV = 2
-
-class goal(Enum):
-    full_spectral_kmeans = "spk"
-    weighted_adjacency_matrix = "wam"
-    diagonal_degree_matrix = "ddg"
-    graph_laplacian = "gl"
-    jacobi = "jacobi"
+SPK = "spk"
+WAM = "wam"
+DDG = "ddg"
+GL = "gl"
+JACOBI = "jacobi"
 
 
 def get_csv_datapoint_dimention(filename):
@@ -29,29 +28,38 @@ def get_dimentional_col(dimention):
         ret += [i]
     return ret
 
-if __name__ == "__main__":
-    try:
-        use_heuristic = False # May be unuseful.
 
+
+if __name__ == "__main__":
+    # try:
+        np.random.seed(0)  # Important line for right pseudo-random behaviour.
+        
+        
+        use_heuristic = len(sys.argv) == 4
         goal = sys.argv[len(sys.argv) - 2]
         data_file = sys.argv[len(sys.argv) - 1]
 
-        # resolve file dimention and construct header
-        dimention = get_csv_datapoint_dimention(data_file)
-        col_names = get_dimentional_col(dimention)
+        # File processing
 
-        data_file_df = pd.read_csv(data_file, names=col_names)
+        dim = get_csv_datapoint_dimention(data_file)
+        column_names = get_dimentional_col(dim)
+        data_file_df = pd.read_csv(data_file, names=column_names)
+        points_series = data_file_df.apply(lambda s: s.to_numpy(), axis=1)
+        points_list = [[j for j in i] for i in points_series]
 
-        points_series = data_file.apply(lambda s: s.to_numpy(), axis=1)
+        # File processing done, only point list is relevent for the next parts.
 
-        # File processing done, now points is a series of the different points given in the txt file.
+        if(goal == WAM):
+            printed_list = mykmeanssp.wam(points_list)
+        elif(goal == DDG):
+            printed_list = mykmeanssp.ddg(points_list)
+
         
-        points_list = [i for i in points_series]
+        for point in printed_list:
+            for coordinate in point[0: -1]:
+                print(f'{coordinate:.4f}', end= ',')
+            print(f'{point[-1]:.4f}')
+            
 
-        print(points_list)
-
-
-
-
-    except Exception:
-        print(ERROR_MESSAGE)
+    # except Exception:
+    #     print(ERROR_MESSAGE)

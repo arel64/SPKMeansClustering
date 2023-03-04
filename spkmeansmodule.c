@@ -2,6 +2,63 @@
 
 #include "spkmeansmodule.h"
 
+static PyObject* spkmeansmodule_allInOne(PyObject* args, int how){
+    vector* vecs;
+    context* c;
+    matrix *wam, *ddg;
+    PyObject* dataPointsList;
+    PyObject* ret;
+    if(how != JACOBI)
+    {
+        c = (context*) malloc(sizeof(context));
+        if(c == NULL)
+        {
+            return NULL;
+        }
+        if(!PyArg_ParseTuple(args, "O", &dataPointsList))
+        {
+            free(c);
+            return NULL;
+        }
+        if((vecs = spkmeansmodule_getDataPoints(dataPointsList, c)) == NULL) 
+        {
+            free(c);
+            return NULL;
+        }
+        wam = spkmeans_wam(c, vecs);
+        vector_destroy(vecs, c->datapoint_count);
+        free(vecs);
+        if (wam == NULL)
+        {
+            free(c);
+            return NULL;
+        }
+        if(how == WAM)
+        {
+            ret = spkmeansmodule_getMatrix(wam);
+            free(c);
+            matrix_destroy(wam);
+            return ret;
+        }
+        ddg = spkmeans_ddg(wam);
+        if(ddg  == NULL)
+        {
+            free(c);
+            matrix_destroy(wam);
+            return NULL;
+        }
+        if(how == DDG)
+        {
+            ret = spkmeansmodule_getMatrix(ddg);
+            free(c);
+            matrix_destroy(wam);
+            matrix_destroy(ddg);
+            return ret;
+        }
+    }
+    return NULL;
+}
+
 static PyObject* spkmeansmodule_getMatrix(matrix* m)
 {
     PyObject* py_list;
@@ -55,7 +112,7 @@ static vector * spkmeansmodule_getDataPoints(PyObject*pyDataPoints, context* c)
         Allocate and get values
     */
     n = PyList_Size(pyDataPoints);
-    c->cluster_count = n;
+    c->datapoint_count = n;
     dim = PyList_Size(PyList_GetItem(pyDataPoints,0));
     c->dimention = dim;
     dataPoints = (vector*) malloc(sizeof(vector) * n);
@@ -73,6 +130,7 @@ static vector * spkmeansmodule_getDataPoints(PyObject*pyDataPoints, context* c)
         if(dataPoints[i] == NULL)
         {
             vector_destroy(dataPoints, i);
+            free(dataPoints);
             PyErr_SetString(PyExc_ValueError,"MallocF1");
             return NULL;
         }
@@ -93,36 +151,21 @@ static PyObject *spkmeansmodule_spk(PyObject *self, PyObject *args)
 }
 static PyObject *spkmeansmodule_wam(PyObject *self, PyObject *args)
 {
-	vector* vecs;
-	context* c = (context*) malloc(sizeof(context));
-	matrix* wam;
-	PyObject* dataPointsList;
-	PyObject* ret;
-	if(!PyArg_ParseTuple(args, "O", &dataPointsList))
-	{
-		return NULL;
-	}
-	if((vecs = spkmeansmodule_getDataPoints(dataPointsList, c)) == NULL) 
-	{
+    PyObject *ret;
+    if((ret = spkmeansmodule_allInOne(args, WAM)) == NULL)
+    {
         return NULL;
     }
-	wam = spkmeans_wam(c, vecs);
-	if (wam == NULL)
-	{
-		PyErr_SetString(PyExc_ValueError,"Wam is null");
-		return NULL;
-	}
-	ret = spkmeansmodule_getMatrix(wam);
-	if (ret == NULL)
-	{
-		PyErr_SetString(PyExc_ValueError,"Wam ret is null");
-		return NULL;
-	}
-	return ret;
+    return ret;
 }
 static PyObject *spkmeansmodule_ddg(PyObject *self, PyObject *args)
 {
-	return NULL;
+	PyObject *ret;
+    if((ret = spkmeansmodule_allInOne(args, DDG)) == NULL)
+    {
+        return NULL;
+    }
+    return ret;
 }
 static PyObject *spkmeansmodule_gl(PyObject *self, PyObject *args)
 {
