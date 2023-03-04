@@ -10,8 +10,8 @@ SRC_DIRS_TEST := $(SRC_DIRS_MAIN) ./tests
 CFLAGS := -ansi -Wall -Wextra -Werror -pedantic-errors -g
 # Find all the C and C++ files we want to compile
 # Note the single quotes around the * expressions. Make will incorrectly expand these otherwise.
-SRCS_MAIN := $(shell find $(SRC_DIRS_MAIN) -name '*.c' ! -name "spkmeansmodule.c" ! -name "test.c")
-SRCS_TEST := $(shell find $(SRC_DIRS_TEST) -name '*.c' ! -name "spkmeansmodule.c" ! -name "main.c")
+SRCS_MAIN := $(shell find $(SRC_DIRS_MAIN) -name '*.c' ! -name "*module.c" ! -name "test.c")
+SRCS_TEST := $(shell find $(SRC_DIRS_TEST) -name '*.c' ! -name "*module.c" ! -name "main.c")
 # String substitution for every C/C++ file.
 # As an example, hello.cpp turns into ./build/hello.cpp.o
 OBJS_MAIN := $(SRCS_MAIN:%=$(BUILD_DIR)/%.o)

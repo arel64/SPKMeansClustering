@@ -1,5 +1,5 @@
-#ifndef SPKMEANS
-#define SPKMEANS
+#ifndef SPKMEANSMODULE
+#define SPKMEANSMODULE
 #include "matrix.h"
 #include "vector.h"
 #include <stdbool.h>
