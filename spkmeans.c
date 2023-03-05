@@ -53,7 +53,7 @@ matrix* spkmeans_ddg(const matrix* const wam)
 }
 matrix* spkmeans_gl(const matrix* const wam,const matrix* const ddg)
 {
-    return matrix_subtract(ddg, wam); /*Probably going to be problematic for the C-module integration.*/
+    return matrix_subtract(ddg, wam);
 }
 /*
 @pre: m is symetric.

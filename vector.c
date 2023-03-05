@@ -80,3 +80,8 @@ void vector_destroy(vector *vecArr, unsigned int k)
 		free(vecArr[j]);
 	}
 }
+void vector_smart_destroy(vector* vecArr)
+{
+	free(vecArr[0]);
+	free(vecArr);
+}

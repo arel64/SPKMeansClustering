@@ -53,12 +53,19 @@ if __name__ == "__main__":
             printed_list = mykmeanssp.wam(points_list)
         elif(goal == DDG):
             printed_list = mykmeanssp.ddg(points_list)
+        elif(goal == GL):
+            printed_list = mykmeanssp.gl(points_list)
+        elif(goal == JACOBI):
+            printed_list = mykmeanssp.jacobi(points_list)
 
-        
-        for point in printed_list:
-            for coordinate in point[0: -1]:
-                print(f'{coordinate:.4f}', end= ',')
-            print(f'{point[-1]:.4f}')
+
+        i = (1 if goal != JACOBI else 2)
+        while(i != 0):
+            for point in (printed_list if goal != JACOBI else printed_list[len(printed_list) - i]):
+                for coordinate in point[0: -1]:
+                    print(f'{coordinate:.4f}', end= ',')
+                print(f'{point[-1]:.4f}')
+            i -= 1
             
 
     # except Exception:
