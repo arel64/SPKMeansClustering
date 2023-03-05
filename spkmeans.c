@@ -62,7 +62,7 @@ void spkmeans_jacobi(matrix* m, matrix* ret[]){
     int max_off_diag_loc[2];
     bool convergence = false;
     double theta, t, c, s;
-    size_t i, j;
+    int i, j;
     matrix* ret_matrix = matrix_I(m->row);
     matrix* m_; /*Will represent A' in the assignment's descrtiption.*/
     matrix* curr_rotation;

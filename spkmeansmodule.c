@@ -215,6 +215,7 @@ static PyObject *spkmeansmodule_jacobi(PyObject *self, PyObject *args)
     for (i = 0; i < 2; ++i)
     {
         PyList_SetItem(ret, i, spkmeansmodule_getPyMatrix(postAlgoCMatrcies[i]));
+        matrix_print(postAlgoCMatrcies[i]);
         matrix_destroy(postAlgoCMatrcies[i]);
     }
     return ret;
