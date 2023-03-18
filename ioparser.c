@@ -83,7 +83,8 @@ void ioparser_print_final_centroids(const context*const c,const centroid * final
 	}
 }
 
-int ioparser_get_dimention(const char* unparsed_line){
+int ioparser_get_dimention(const char* unparsed_line)
+{
 	int i = 0;
 	int count = 0; /*counting of the char ',' in the given string.*/
 	while((*(unparsed_line + i) != '\n') && (*(unparsed_line + i) != EOF)){
@@ -92,4 +93,50 @@ int ioparser_get_dimention(const char* unparsed_line){
 		i++;
 	}
 	return count + 1;
+}
+point* ioparser_parse_file_to_data_points   (context* c,char* file_name)
+{
+	linked_list file_data;
+	FILE* file;
+    vector* data_vecs;
+    unsigned int status;
+
+
+	list_init(&file_data);
+	/*
+        Open File
+    */
+    file = fopen(file_name,"r");
+    if(file == NULL)
+    {
+        return NULL;	
+    }
+   
+
+    /* 
+        Get all data in string form
+    */
+	if (ioparser_parse_file_linked_list(c,&file_data, file))
+	{
+        list_destroy(&file_data);
+        fclose(file);
+         return NULL;	
+	}
+    fclose(file);
+    data_vecs = (vector *)malloc(sizeof(vector) * c->datapoint_count);
+    if (data_vecs == NULL )
+    {
+        list_destroy(&file_data);
+         return NULL;	
+    }
+    
+    list_reverse(&file_data); 
+    status = ioparser_parse_data_points(c,&file_data,data_vecs); 
+    list_destroy(&file_data);
+    if(status != c->datapoint_count)
+    {
+        vector_destroy(data_vecs,status);
+ 		return NULL;	
+    }
+	return data_vecs;
 }

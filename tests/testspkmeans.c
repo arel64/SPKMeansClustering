@@ -1,77 +1,144 @@
 #include "testspkmeans.h"
+#include <CUnit/CUnit.h>
+#include <string.h>
+#define TESTSPKMEANS_MAGIC_TEST_NUMBER 10
+#define FILE_IN_PREFIX_WAM "tests_input/test"
+#define FILE_IN_SUFFIX_WAM ".txt"
+#define FILE_OUT_PREFIX_WAM "tests_output/C/test"
+#define FILE_OUT_SUFFIX_WAM "_wam.txt"
 
+#define FILE_IN_PREFIX_DDG "tests_input/test"
+#define FILE_IN_SUFFIX_DDG ".txt"
+#define FILE_OUT_PREFIX_DDG "tests_output/C/test"
+#define FILE_OUT_SUFFIX_DDG "_ddg.txt"
+
+#define FILE_IN_PREFIX_GL "tests_input/test"
+#define FILE_IN_SUFFIX_GL ".txt"
+#define FILE_OUT_PREFIX_GL "tests_output/C/test"
+#define FILE_OUT_SUFFIX_GL "_gl.txt"
+
+#define WAM 0
+#define DDG 1
+#define GL 2
+
+
+void imposeInt(int n,char* out,char* pre,char* post)
+{
+    char test_count_str[255];
+    strcpy(out, pre);
+    sprintf(test_count_str, "%d", n);
+    strcat(out,test_count_str );
+    strcat(out,post );
+}
+void test_matrix_function(int func,pre_post* p)
+{
+    vector *computed_vecs,*expected_vecs;
+    context c_computed = {0,0,0};
+    context c_expected = {0,0,0};
+    matrix *computed_matrix= NULL,*expected_matrix = NULL;
+    matrix *temp_wam = NULL,*temp_ddg =NULL ;
+    int test_count = 1;
+    unsigned n_computed,n_expected;
+    for(;test_count<TESTSPKMEANS_MAGIC_TEST_NUMBER;test_count++)
+    {
+       
+        char* file_in_name  = malloc(sizeof(char)*255);
+        char* file_out_name = malloc(sizeof(char)*255);
+        imposeInt(test_count, file_in_name,p->pre_in,p->post_in);
+        if(file_in_name == NULL)
+        {
+            CU_FAIL_FATAL();
+        }
+        imposeInt(test_count, file_out_name,p->pre_out,p->post_out);
+        if(file_out_name == NULL)
+        {
+            free(file_in_name);
+            CU_FAIL_FATAL();
+        }
+        computed_vecs = ioparser_parse_file_to_data_points   (&c_computed,file_in_name);
+        if(computed_vecs == NULL)
+        {
+            CU_FAIL_FATAL();
+        }
+        expected_vecs  = ioparser_parse_file_to_data_points   (&c_expected,file_out_name);
+        if(expected_vecs == NULL)
+        {
+            vector_destroy(computed_vecs, c_expected.datapoint_count);
+            CU_FAIL_FATAL();
+        }
+        n_expected = c_expected.datapoint_count;
+        n_computed = c_computed.datapoint_count;
+        switch(func)
+        {
+            case WAM:
+                computed_matrix = spkmeans_wam(&c_computed,computed_vecs);
+
+            break;
+            case DDG:
+                temp_wam = spkmeans_wam(&c_computed,computed_vecs);
+                if(temp_wam == NULL)
+                {
+                    CU_FAIL_FATAL();
+                }
+                computed_matrix = spkmeans_ddg(temp_wam);
+
+            break;
+            case GL:
+                temp_wam = spkmeans_wam(&c_computed,computed_vecs);
+                if(temp_wam == NULL)
+                {
+                    CU_FAIL_FATAL();
+                }
+                temp_ddg = spkmeans_ddg(temp_wam);
+                if(temp_ddg == NULL)
+                {
+                    CU_FAIL_FATAL();
+                }
+                computed_matrix = spkmeans_gl(temp_wam,temp_ddg);
+            break;
+            default:
+                CU_FAIL_FATAL();
+            break;
+        }
+        if(computed_matrix == NULL)
+        {
+            CU_FAIL_FATAL();
+        }
+        expected_matrix = matrix_create_from_data(n_expected, n_expected,expected_vecs );
+        if(computed_matrix == NULL)
+        {
+            matrix_destroy(computed_matrix);
+            CU_FAIL_FATAL();
+        }
+        /*
+            This section is horrificly inefficent, but this is a test so... Duck it
+        */
+        vector_destroy(expected_vecs, n_expected);
+        vector_destroy(computed_vecs, n_computed);
+        CU_ASSERT_EQUAL(matrix_is_equal(computed_matrix,expected_matrix,0.00009),1);
+        matrix_destroy(computed_matrix);
+        matrix_destroy(expected_matrix);
+    }
+}
 void testWAM(void)
 {
-    CU_FAIL();
-/*
-    matrix* ret;
-    matrix* m = matrix_create(7,5);
-    context c = {5,0,7};
-    size_t i=0,j=0;
-    for(;i<7;i++)
-    {
-        for(j=0;j<5;j++)
-        {
-            m->matrix[i][j] = i+1;
-        }
-    }
-    ret = spkmeans_wam(&c,m->matrix);
-    matrix_print(ret);
-    matrix_destroy(m);
-    matrix_destroy(ret);
-    */
+    pre_post p = {FILE_IN_PREFIX_WAM,FILE_IN_SUFFIX_WAM,FILE_OUT_PREFIX_WAM,FILE_OUT_SUFFIX_WAM};
+    test_matrix_function(WAM,&p);
+
 }
 void testDDG(void)
 {
-    CU_FAIL();
-
+    pre_post p = {FILE_IN_PREFIX_DDG,FILE_IN_SUFFIX_DDG,FILE_OUT_PREFIX_DDG,FILE_OUT_SUFFIX_DDG};
+    test_matrix_function(DDG,&p);
 }
 void testLP(void)
 {
-    CU_FAIL();
-
+   pre_post p = {FILE_IN_PREFIX_GL,FILE_IN_SUFFIX_GL,FILE_OUT_PREFIX_GL,FILE_OUT_SUFFIX_GL};
+    test_matrix_function(GL,&p);
 }
 void testJACOBI(void)
 {
-    /*
-    matrix* dual [2]={NULL,NULL};
-    matrix* m0 = matrix_create(3,3);
-    matrix* m10 = matrix_create(3,3);
-    matrix* m11 = matrix_create(1,3);
-    dual[0] = m10;
-    dual[1] = m11;
-
-    m0->matrix[0][0] = 1;
-    m0->matrix[0][1] = 2;
-    m0->matrix[0][2] = 3;
-    
-    m0->matrix[1][0] = 2;
-    m0->matrix[1][1] = 1;
-    m0->matrix[1][2] = 4;
-
-    m0->matrix[2][0] = 3;
-    m0->matrix[2][1] = 4;
-    m0->matrix[2][2] = 5;
-    matrix_print(m0);
-    spkmeans_jacobi(m0,dual);
-    matrix_print(dual[0]);
-    matrix_print(dual[1]);
-    */
-    matrix* dual [2]={NULL,NULL};
-    matrix* m0 = matrix_create(2,2);
-    matrix* m10 = matrix_create(2,2);
-    matrix* m11 = matrix_create(1,2);
-    dual[0] = m10;
-    dual[1] = m11;
-    m0->matrix[0][0] = 2;
-    m0->matrix[0][1] = 3;
-
-    m0->matrix[1][0] = 3;
-    m0->matrix[1][1] = 7;
-    spkmeans_jacobi(m0,dual);
-    matrix_print(dual[0]);
-    matrix_print(dual[1]);
-
+   CU_FAIL_FATAL();
 }
 int testspkmeans_init(void)
 {

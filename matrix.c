@@ -21,6 +21,19 @@ matrix* matrix_create(const unsigned row,const unsigned col)
         ret->matrix[i] = alloc + col*i;
     return  ret;
 }
+matrix* matrix_create_from_data(const unsigned row,const unsigned col,double** data)
+{
+    matrix* m = matrix_create(row,col);
+    size_t i = 0,j = 0;
+    for(;i<row;i++)
+    {
+        for(j=0;j<col;j++)
+        {
+            m->matrix[i][j] = data[i][j];
+        }
+    }
+    return m;
+}
 matrix* matrix_add(const matrix *const left, const matrix*const right)
 {
     matrix* ret = matrix_create(left->row,right->col);
@@ -126,6 +139,25 @@ void matrix_each_cell(matrix* into,const matrix *const left,const matrix *const 
             }
         }
     }
+}
+int matrix_is_equal(const matrix*const m1,const matrix*const m2,double max_delta)
+{
+    size_t i=0,j=0;
+    if(m1->row != m2->row || m1->col != m2->col)
+    {
+        return 0;
+    }
+    for(;i<m1->row;i++)
+    {
+        for(j=0;j<m1->col;j++)
+        {
+            if(fabs(m1->matrix[i][j] - m2->matrix[i][j]) > fabs(max_delta))
+            {
+                return 0;
+            }
+        }
+    }
+    return 1;
 }
 void    matrix_copyinto_matrix(matrix *copyInto, const matrix*const copyFrom)
 {

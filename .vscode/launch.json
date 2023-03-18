@@ -2,10 +2,19 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Run Main",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/spkmeans.py",
+            "args": ["jacobi", "tests/tests_output/C/gl.txt"],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+        },
+        {
             "name": "C Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/spkmeans",
+            "program": "${workspaceFolder}/tests/test",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

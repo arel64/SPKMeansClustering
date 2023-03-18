@@ -12,8 +12,13 @@
 #include "vector.h"
 #include <stdbool.h>
 #include <math.h>
-
-
+typedef struct{
+    char* pre_in;
+    char* post_in;
+    char* pre_out;
+    char* post_out;
+} pre_post;
+void test_matrix_function(int,pre_post* p);
 matrix* spkmeans_wam(const  context*const,const point* const data_points);
 matrix* spkmeans_ddg(const matrix* const m);
 matrix* spkmeans_gl(const matrix* const wam,const matrix* const ddg);
