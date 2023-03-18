@@ -1,14 +1,12 @@
 #include "spkmeans.h"
+#include "matrix.h"
 
-#define WAM_FORMULA(x,y,dim) (exp(-0.5*pow(vector_euclidean_distance(x,y,dim),2)))
-#define THETA_FORMULA(m, loc) ((m->matrix[loc[1]][loc[1]] - m->matrix[loc[0]][loc[0]])/(2 * m->matrix[0][1]))
-#define SIGN(x) (x >= 0 ? 1 : -1)
 
 matrix* spkmeans_wam(const  context*const c,const point* const data_points)
 {
     size_t i=0,j=0;
     size_t n=c->datapoint_count;
-    matrix* ret = matrix_create(c->datapoint_count,c->datapoint_count);
+    matrix* ret = matrix_create(n,n);
     if(ret==NULL)
     {
         return NULL;
@@ -23,7 +21,7 @@ matrix* spkmeans_wam(const  context*const c,const point* const data_points)
             }
             else if(i<j) 
             {
-                ret->matrix[i][j] = WAM_FORMULA(data_points[i],data_points[j],c->dimention);
+                ret->matrix[i][j] = SPKMEANS_WAM_FORMULA(data_points[i],data_points[j],c->dimention);
             }
             else
             {
@@ -63,20 +61,26 @@ void spkmeans_jacobi(matrix* m, matrix* ret[]){
     bool convergence = false;
     double theta, t, c, s;
     int i, j;
-    matrix* ret_matrix = matrix_I(m->row);
+    matrix* ret_matrix = matrix_create_identity_matrix(m->row);
     matrix* m_; /*Will represent A' in the assignment's descrtiption.*/
     matrix* curr_rotation;
     matrix* temp_matrix; /*A temporary matrix for data loss prevention.*/
-    double* first_vector = (double*) malloc(sizeof(double) * m->col);
-    double* second_vector = (double*) malloc(sizeof(double) * m->col);
-    for(i = 0;!convergence && i < 100; i++)
+    vector first_vector = (vector) malloc(sizeof(double) * m->col);
+    vector second_vector = (vector) malloc(sizeof(double) * m->col);
+
+
+    for(i = 0;!convergence && i < SPKMEANS_MAX_ROATATIONS; i++)
     {
         matrix_find_max_off_diag(m, max_off_diag_loc);
-        theta = THETA_FORMULA(m, max_off_diag_loc);
-        t = SIGN(theta) / (fabs(theta) + sqrt(pow(theta, 2) + 1));
-        c = 1 / sqrt(pow(t, 2) + 1);
+        theta = SPKMEANS_THETA_FORMULA(m, max_off_diag_loc);
+        t = SPKMEANS_T_FORMULA(theta);
+        c = SPKMEANS_C_FORMULA(t);
         s = c * t;
-        curr_rotation = matrix_I(m->col);
+        /*
+        This whole section does WAY to many allocations, there is no need to matrix_create every iteration.
+        TODO:: FIX MULTIPLE ALLOCS
+        */
+        curr_rotation = matrix_create_identity_matrix(m->col);
         curr_rotation->matrix[max_off_diag_loc[0]][max_off_diag_loc[0]] = c;
         curr_rotation->matrix[max_off_diag_loc[1]][max_off_diag_loc[1]] = c;
         curr_rotation->matrix[max_off_diag_loc[0]][max_off_diag_loc[1]] = s;

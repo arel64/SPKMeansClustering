@@ -1,5 +1,13 @@
 #ifndef SPKMEANS
 #define SPKMEANS
+
+#define SPKMEANS_WAM_FORMULA(x,y,dim) (exp(-0.5*pow(vector_euclidean_distance(x,y,dim),2)))
+#define SPKMEANS_THETA_FORMULA(m, loc) ((m->matrix[loc[1]][loc[1]] - m->matrix[loc[0]][loc[0]])/(2 * m->matrix[0][1]))
+#define SPKMEANS_SIGN(theta) (theta >= 0 ? 1 : -1)
+#define SPKMEANS_T_FORMULA(theta) (SPKMEANS_SIGN(theta)/(fabs(theta) + sqrt(pow(theta, 2) + 1)))
+#define SPKMEANS_C_FORMULA(t) (1 / sqrt(pow(t, 2) + 1))
+#define SPKMEANS_MAX_ROATATIONS (100)
+
 #include "matrix.h"
 #include "vector.h"
 #include <stdbool.h>

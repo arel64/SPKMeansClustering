@@ -158,7 +158,7 @@ double  matrix_sum_axis(const matrix*const m,const unsigned vector_num,const uns
     }
     return count;
 }
-void    matrix_print(matrix* m)
+void matrix_print(matrix* m)
 {
     matrix_each_cell(m, NULL, NULL, 0, NULL, NULL, PRINT_MATRIX);
 }
@@ -168,7 +168,7 @@ void    matrix_print(matrix* m)
 void matrix_find_max_off_diag(matrix* const m, int* const loc){
     matrix_each_cell(m, NULL, NULL, 0, loc, NULL, FIND_MAX_OFF_DIAGNAL);
 }
-matrix* matrix_I(const unsigned size){
+matrix* matrix_create_identity_matrix(const unsigned size){
     size_t i = 0;
     matrix* ret = matrix_create(size, size);
     matrix_zerofill(ret);
