@@ -2,8 +2,11 @@
 #define TESTSPKMEANSAPI
 #include <CUnit/Basic.h>
 #include <CUnit/CUnit.h>
+
 #include "suite_tools.h"
 #include "../spkmeans.h"
+#include "../linked_list.h"
+#include "../ioparser.h"
 
 int testapi_init(void);
 int testapi_clean(void);

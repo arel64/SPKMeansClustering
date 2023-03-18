@@ -24,17 +24,18 @@ typedef struct{
 
 
 matrix* matrix_create(const unsigned row,const unsigned col);
+matrix* matrix_create_from_data(const unsigned row,const unsigned col,double** data);
 matrix* matrix_add(const matrix *const left, const matrix*const right);
 matrix* matrix_subtract(const matrix *const left, const matrix*const right);
 matrix* matrix_multiply(const matrix *const left, const matrix*const right);
 matrix* matrix_multiply_scalar(const matrix *const,double);
 matrix* matrix_create_identity_matrix(const unsigned size);
+int     matrix_is_equal(const matrix*const,const matrix*const,double max_delta);
 void    matrix_zerofill(matrix * m);
 double  matrix_sum_row(const matrix*const m,const unsigned row);
 double  matrix_sum_col(const matrix*const m,const unsigned col);
 void    matrix_copyinto_matrix(matrix *copyInto, const matrix*const copyFrom);
 void    matrix_print(matrix* m);
-
 void    matrix_find_max_off_diag(matrix* const m, int* const loc );
 void    matrix_tranpose_row(matrix* m, const unsigned row);
 bool    matrix_check_convergence(matrix* const m,matrix* const m_);

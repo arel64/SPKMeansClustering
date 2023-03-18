@@ -12,12 +12,10 @@
 int main(int argc, char **argv)
 {
     matrix* wam = NULL,*ddg =NULL,*gl = NULL,*jacobi =NULL;
-    linked_list file_data;
     context c = {0,0,0};
     char *goal,*file_name;
-    unsigned int status;
-    FILE* file;
     vector* data_vecs;
+
 
     /*
         Validate Arguments
@@ -26,46 +24,16 @@ int main(int argc, char **argv)
 	{
 		ERROR_AND_EXIT();	
 	}
-    list_init(&file_data); 
+   
     goal = argv[1];
     file_name = argv[2];
+    data_vecs = ioparser_parse_file_to_data_points(&c, file_name);
 
-
-    /*
-        Open File
-    */
-    file = fopen(file_name,"r");
-    if(file == NULL)
+    if(data_vecs == NULL)
     {
-        ERROR_AND_EXIT();	
-    }
-   
-
-    /* 
-        Get all data in string form
-    */
-	if (ioparser_parse_file_linked_list(&c,&file_data, file))
-	{
-        list_destroy(&file_data);
-        fclose(file);
-        ERROR_AND_EXIT();	
-	}
-    fclose(file);
-    data_vecs = (vector *)malloc(sizeof(vector) * c.datapoint_count);
-    if (data_vecs == NULL )
-    {
-        list_destroy(&file_data);
         ERROR_AND_EXIT();
     }
     
-    list_reverse(&file_data); 
-    status = ioparser_parse_data_points(&c,&file_data,data_vecs); 
-    list_destroy(&file_data);
-    if(status != c.datapoint_count)
-    {
-        vector_destroy(data_vecs,status);
-        ERROR_AND_EXIT();
-    }
     if(strcmp(goal,JACOBI) == 0)
     {
         size_t i = 0;
