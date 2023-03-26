@@ -50,6 +50,7 @@ matrix* matrix_multiply(const matrix *const left, const matrix*const right)
 {
     matrix* ret = matrix_create(left->row,right->col);
     unsigned i = 0 , j = 0 , k = 0;
+    matrix_zerofill(ret);
     if(ret == NULL) return NULL;
 
     for(;i<ret->row;i++)
@@ -63,6 +64,24 @@ matrix* matrix_multiply(const matrix *const left, const matrix*const right)
     }
     return ret;
 }
+
+void matrix_smart_multiply(matrix* into, const matrix *const left, const matrix*const right)
+{
+    unsigned i = 0 , j = 0 , k = 0;
+    matrix_zerofill(into);
+
+    for(;i<left->row;i++)
+    {
+        for(j=0;j<right->col;j++)
+        {
+            for (k = 0; k < right->row; k++) {
+                into->matrix[i][j] += left ->matrix[i][k] * right->matrix[k][j];
+            }
+        }
+    }
+}
+
+
 matrix* matrix_multiply_scalar(const matrix *const m,double scalar)
 {
     matrix* ret = matrix_create(m->row,m->col);
@@ -76,7 +95,7 @@ void matrix_zerofill(matrix * m)
 void matrix_each_cell(matrix* into,const matrix *const left,const matrix *const right,const double scalar, int* const ret_loc, double* ret_scalar, unsigned how)
 {
     size_t i = 0 , j = 0;
-    double max_off_diag = -1;
+    double dub = -1;
 
     if(into == NULL) return;
 
@@ -117,9 +136,9 @@ void matrix_each_cell(matrix* into,const matrix *const left,const matrix *const 
                     {
                         j = i;
                     }
-                    else if(fabs(into->matrix[i][j]) > max_off_diag)
+                    else if(fabs(into->matrix[i][j]) > dub)
                     {
-                        max_off_diag = fabs(into->matrix[i][j]);
+                        dub = fabs(into->matrix[i][j]);
                         *ret_loc = i;
                         *(ret_loc + 1) = j;
                     }
@@ -132,6 +151,18 @@ void matrix_each_cell(matrix* into,const matrix *const left,const matrix *const 
                     else if(i < j)
                     {
                         *(ret_scalar) += 2 * pow(into->matrix[i][j], 2);
+                    }
+                    break;
+                case TRANSPOSE:
+                    if(j < i)
+                    {
+                        j = i;
+                    }
+                    else if(i < j)
+                    {
+                        dub = into->matrix[i][j];
+                        into->matrix[i][j] = into->matrix[j][i];
+                        into->matrix[j][i] = dub;
                     }
                     break;
                 default:
@@ -233,6 +264,9 @@ double matrix_calc_off(matrix* const m)
 bool matrix_check_convergence(matrix* const m, matrix* const m_)
 {
     return (matrix_calc_off(m) - matrix_calc_off(m_)) <= EPSILON;
+}
+void matrix_transpose(matrix* mat){
+    matrix_each_cell(mat, NULL, NULL, 0, NULL, NULL, TRANSPOSE);
 }
 /*
     @pre: from is quandratic.

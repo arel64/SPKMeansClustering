@@ -4,7 +4,7 @@ CC := gcc
 BUILD_DIR := ./build
 SRC_DIRS := ./
 SRC_DIRS_EXCLUDE := $(SRC_DIRS) -name '*.c' ! -name '*module.c' ! -path "./tests/*"
-CFLAGS := -ansi -Wall -Wextra -Werror -pedantic-errors -g 
+CFLAGS := -ansi -Wall -Wextra -Werror -pedantic-errors -g
 # Find all the C and C++ files we want to compile
 # Note the single quotes around the * expressions. Make will incorrectly expand these otherwise.
 SRCS := $(shell find $(SRC_DIRS_EXCLUDE))
@@ -22,7 +22,7 @@ DEPS := $(OBJS:.o=.d)
 INC_FLAGS := -I/usr/include/python3.7
 # The -MMD and -MP flags together generate Makefiles for us!
 # These files will have .d instead of .o as the output.
-LDFLAGS := $(INC_FLAGS) -MMD -MP -lm -lcunit
+LDFLAGS := $(INC_FLAGS) -MMD -MP -lm -lcunit -pg
 
 
 

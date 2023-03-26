@@ -7,6 +7,7 @@
 #define SPKMEANS_T_FORMULA(theta) (SPKMEANS_SIGN(theta)/(fabs(theta) + sqrt(pow(theta, 2) + 1)))
 #define SPKMEANS_C_FORMULA(t) (1 / sqrt(pow(t, 2) + 1))
 #define SPKMEANS_MAX_ROATATIONS (100)
+#define SWITCH(a,b) {a = a | b; b = a ^ b; a = a ^ b;}
 
 #include "matrix.h"
 #include "vector.h"

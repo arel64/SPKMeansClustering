@@ -63,6 +63,7 @@ void spkmeans_jacobi(matrix* a, matrix* ret[]){
     int i, j;
     matrix* ret_matrix = matrix_create_identity_matrix(a->row);
     matrix* a_next = matrix_create(a->row, a->col); /*Will represent A' in the assignment's descrtiption.*/
+    matrix* temp = matrix_create(a->row, a->col);
     matrix* curr_rotation = matrix_create_identity_matrix(a->col);
     vector first_vector = (vector) malloc(sizeof(double) * a->col);
     vector second_vector = (vector) malloc(sizeof(double) * a->col);
@@ -78,16 +79,23 @@ void spkmeans_jacobi(matrix* a, matrix* ret[]){
         t = SPKMEANS_T_FORMULA(theta);
         c = SPKMEANS_C_FORMULA(t);
         s = c * t;
-        curr_rotation->matrix[max_off_diag_loc[0]][max_off_diag_loc[0]] = c;
-        curr_rotation->matrix[max_off_diag_loc[1]][max_off_diag_loc[1]] = c;
-        curr_rotation->matrix[max_off_diag_loc[0]][max_off_diag_loc[1]] = s;
-        curr_rotation->matrix[max_off_diag_loc[1]][max_off_diag_loc[0]] = -s;
-        ret_matrix = matrix_multiply(ret_matrix, curr_rotation);
+        matrix_copyinto_matrix(temp, ret_matrix);
+        for(j = 0; j < 2; j++)
+        {
+            vector_copyinto_vector(&first_vector, &temp->matrix[max_off_diag_loc[j]], a->col);
+            vector_copyinto_vector(&second_vector, &temp->matrix[max_off_diag_loc[1-j]], a->col);
+            vector_multipy_vector_by_scalar(&first_vector, c, a->col);
+            vector_multipy_vector_by_scalar(&second_vector, pow(-1,1-j) *s, a->col);
+            vector_each_cell(&ret_matrix->matrix[max_off_diag_loc[j]],&first_vector,&second_vector,0,ADD_VECTOR,a->col);
+        }
         for(i = 0; i < 2; i++)
         {
             for(j = 0; j < 2; j++)
             {
-                curr_rotation->matrix[max_off_diag_loc[i]][max_off_diag_loc[j]] = 0;
+                if(i == j)
+                    curr_rotation->matrix[max_off_diag_loc[i]][max_off_diag_loc[j]] = 1;
+                else
+                    curr_rotation->matrix[max_off_diag_loc[i]][max_off_diag_loc[j]] = 0;       
             }
         }
         matrix_copyinto_matrix(a_next, a);
@@ -96,7 +104,7 @@ void spkmeans_jacobi(matrix* a, matrix* ret[]){
             vector_copyinto_vector(&first_vector, &a->matrix[max_off_diag_loc[j]], a->col);
             vector_copyinto_vector(&second_vector, &a->matrix[max_off_diag_loc[1-j]], a->col);
             vector_multipy_vector_by_scalar(&first_vector, c, a->col);
-            vector_multipy_vector_by_scalar(&second_vector, (pow(-1,1-j))*s, a->col);
+            vector_multipy_vector_by_scalar(&second_vector, (pow(-1,1-j)) * s, a->col);
             vector_each_cell(&a_next->matrix[max_off_diag_loc[j]],&first_vector,&second_vector,0,ADD_VECTOR,a->col);
             matrix_tranpose_row(a_next, max_off_diag_loc[j]);
             a_next->matrix[max_off_diag_loc[j]][max_off_diag_loc[j]] = pow(c,2) * a->matrix[max_off_diag_loc[j]][max_off_diag_loc[j]] + pow(s,2) * a->matrix[max_off_diag_loc[1 - j]][max_off_diag_loc[1 - j]] + pow(-1, 1 + j) * 2 * s * c * a->matrix[max_off_diag_loc[j]][max_off_diag_loc[1 - j]];
@@ -106,12 +114,15 @@ void spkmeans_jacobi(matrix* a, matrix* ret[]){
             a_next->matrix[max_off_diag_loc[j]][max_off_diag_loc[1-j]] = 0;
         }
         convergence = matrix_check_convergence(a, a_next);
-        a = a_next;
+        matrix_copyinto_matrix(a, a_next);
     }
+    matrix_transpose(ret_matrix);
     vector_destroy(&first_vector, 1);
     vector_destroy(&second_vector, 1);
     ret[0] = matrix_create(1, a->row);
     matrix_copy_diag_into_row_matrix(ret[0], a);
     matrix_destroy(a);
+    matrix_destroy(a_next);
+    matrix_destroy(temp);
     ret[1] = ret_matrix;
 }
