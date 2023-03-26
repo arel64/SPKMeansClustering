@@ -60,7 +60,7 @@ void spkmeans_jacobi(matrix* a, matrix* ret[]){
     int max_off_diag_loc[2];
     bool convergence = false;
     double theta, t, c, s;
-    int i, j;
+    int i, j,p;
     matrix* ret_matrix = matrix_create_identity_matrix(a->row);
     matrix* a_next = matrix_create(a->row, a->col); /*Will represent A' in the assignment's descrtiption.*/
     matrix* temp = matrix_create(a->row, a->col);
@@ -88,14 +88,14 @@ void spkmeans_jacobi(matrix* a, matrix* ret[]){
             vector_multipy_vector_by_scalar(&second_vector, pow(-1,1-j) *s, a->col);
             vector_each_cell(&ret_matrix->matrix[max_off_diag_loc[j]],&first_vector,&second_vector,0,ADD_VECTOR,a->col);
         }
-        for(i = 0; i < 2; i++)
+        for(p = 0; p < 2; p++)
         {
             for(j = 0; j < 2; j++)
             {
-                if(i == j)
-                    curr_rotation->matrix[max_off_diag_loc[i]][max_off_diag_loc[j]] = 1;
+                if(p == j)
+                    curr_rotation->matrix[max_off_diag_loc[p]][max_off_diag_loc[j]] = 1;
                 else
-                    curr_rotation->matrix[max_off_diag_loc[i]][max_off_diag_loc[j]] = 0;       
+                    curr_rotation->matrix[max_off_diag_loc[p]][max_off_diag_loc[j]] = 0;       
             }
         }
         matrix_copyinto_matrix(a_next, a);
