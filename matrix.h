@@ -42,6 +42,5 @@ void    matrix_tranpose_row(matrix* m, const unsigned row);
 bool    matrix_check_convergence(matrix* const m,matrix* const m_);
 void    matrix_copy_diag_into_row_matrix(matrix* const into, const matrix* const from);
 void    matrix_destroy(matrix* m);
-void    matrix_smart_multiply(matrix* m, const matrix* const left, const matrix* const right);
 void    matrix_transpose(matrix* mat);
 #endif

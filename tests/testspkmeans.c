@@ -141,17 +141,17 @@ void testJACOBI(void)
    matrix *m;
    matrix* dual[2] = {NULL,NULL};
    m = matrix_create(3, 3);
-   m->matrix[0][0] = 2;
-   m->matrix[0][1] = -1;
-   m->matrix[0][2] = 0;
+   m->matrix[0][0] = 0;
+   m->matrix[0][1] = 5;
+   m->matrix[0][2] = 2;
 
-   m->matrix[1][0] = -1;
-   m->matrix[1][1] = 2;
-   m->matrix[1][2] = -1;
+   m->matrix[1][0] = 5;
+   m->matrix[1][1] = 0;
+   m->matrix[1][2] = 0;
 
-   m->matrix[2][0] = 0;
-   m->matrix[2][1] = -1;
-   m->matrix[2][2] = 2;
+   m->matrix[2][0] = 2;
+   m->matrix[2][1] = 0;
+   m->matrix[2][2] = 0;
 
     matrix_print(m);
    spkmeans_jacobi(m,dual);

@@ -65,22 +65,6 @@ matrix* matrix_multiply(const matrix *const left, const matrix*const right)
     return ret;
 }
 
-void matrix_smart_multiply(matrix* into, const matrix *const left, const matrix*const right)
-{
-    unsigned i = 0 , j = 0 , k = 0;
-    matrix_zerofill(into);
-
-    for(;i<left->row;i++)
-    {
-        for(j=0;j<right->col;j++)
-        {
-            for (k = 0; k < right->row; k++) {
-                into->matrix[i][j] += left ->matrix[i][k] * right->matrix[k][j];
-            }
-        }
-    }
-}
-
 
 matrix* matrix_multiply_scalar(const matrix *const m,double scalar)
 {
