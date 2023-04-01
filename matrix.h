@@ -4,12 +4,13 @@
 #define SUBTRACT_MATRIX 201
 #define MULTIPLY_SCALAR_MATRIX 301
 #define COPYINTO_MATRIX 401
+#define TRANSPOSE 501
 #define ZEROFILL_MATRIX 601
 #define PRINT_MATRIX 701
 #define FIND_MAX_OFF_DIAGNAL 801
 #define CALCULATE_OFF 901
-
 #define EPSILON 0.00001
+#define ZERO_DIFFERENTIATOR(a) ((fabs(a) <= 0.00005) && ((1 / a) < 0))
 
 #include "context.h"
 #include "vector.h"
@@ -41,4 +42,6 @@ void    matrix_tranpose_row(matrix* m, const unsigned row);
 bool    matrix_check_convergence(matrix* const m,matrix* const m_);
 void    matrix_copy_diag_into_row_matrix(matrix* const into, const matrix* const from);
 void    matrix_destroy(matrix* m);
+
+void    matrix_transpose(matrix* mat);
 #endif

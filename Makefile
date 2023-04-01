@@ -4,7 +4,7 @@ CC := gcc
 BUILD_DIR := ./build
 SRC_DIRS := ./
 SRC_DIRS_EXCLUDE := $(SRC_DIRS) -name '*.c' ! -name '*module.c' ! -path "./tests/*"
-CFLAGS := -ansi -Wall -Wextra -Werror -pedantic-errors -g 
+CFLAGS := -ansi -Wall -Wextra -Werror -pedantic-errors -g
 # Find all the C and C++ files we want to compile
 # Note the single quotes around the * expressions. Make will incorrectly expand these otherwise.
 SRCS := $(shell find $(SRC_DIRS_EXCLUDE))
