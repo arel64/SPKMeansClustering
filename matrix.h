@@ -10,6 +10,7 @@
 #define FIND_MAX_OFF_DIAGNAL 801
 #define CALCULATE_OFF 901
 #define EPSILON 0.00001
+#define ZERO_DIFFERENTIATOR(a) ((fabs(a) <= 0.00005) && ((1 / a) < 0))
 
 #include "context.h"
 #include "vector.h"
