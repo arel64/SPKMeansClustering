@@ -24,7 +24,7 @@ static PyObject *spkmeansmodule_reverseSwitch(PyObject *args, int how)
         return NULL;
     }
     wam = spkmeans_wam(c, vecs);
-    vector_smart_destroy(vecs);
+    vector_destroy(&vecs,1);
     if (wam == NULL)
     {
         free(c);

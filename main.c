@@ -49,7 +49,7 @@ int main(int argc, char **argv)
             for(j=0; j < c.datapoint_count; j++)
                 jacobi->matrix[i][j] = data_vecs[i][j];
         }
-        vector_destroy(data_vecs,c.datapoint_count);
+        vector_destroy(&data_vecs,c.datapoint_count);
         spkmeans_jacobi(jacobi, jacobi_returned_matrices);
         matrix_print(jacobi_returned_matrices[0]);
         matrix_print(jacobi_returned_matrices[1]);
@@ -61,8 +61,7 @@ int main(int argc, char **argv)
     {
         /* Non Jacobi */
         wam = spkmeans_wam(&c, data_vecs);
-        vector_destroy(data_vecs,c.datapoint_count);
-        data_vecs = NULL;
+        vector_destroy(&data_vecs,c.datapoint_count);
         if(wam == NULL)
         {
             ERROR_AND_EXIT();
@@ -102,7 +101,10 @@ int main(int argc, char **argv)
             return 0;
         }
     }
-    vector_destroy(data_vecs,c.datapoint_count);	
+    /*
+     This part is unreachable but stays for the future
+    */
+    vector_destroy(&data_vecs,c.datapoint_count);	
     matrix_destroy(wam);
     matrix_destroy(ddg);
     matrix_destroy(gl);

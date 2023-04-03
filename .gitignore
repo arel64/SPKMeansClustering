@@ -176,7 +176,8 @@ dmypy.json
 *.su
 *.idb
 *.pdb
-
+*.txt
+test
 # Kernel Module Compile Results
 *.mod*
 *.cmd
@@ -188,3 +189,5 @@ dkms.conf
 
 spkmeans
 TESTspkmeans
+compare_results.py
+tests/test

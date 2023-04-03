@@ -29,7 +29,7 @@ int ioparser_parse_file_linked_list(context* c,linked_list *l, FILE *stream)
 
 int ioparser_parse_data_points(const context*const c,linked_list *l , point *data)
 {
-	double *temp;
+	point temp;
     size_t lines_parsed = 0;
 	list_node *iter = l->head;
 
@@ -120,7 +120,7 @@ point* ioparser_parse_file_to_data_points   (context* c,char* file_name)
 	{
         list_destroy(&file_data);
         fclose(file);
-         return NULL;	
+        return NULL;	
 	}
     fclose(file);
     data_vecs = (vector *)malloc(sizeof(vector) * c->datapoint_count);
@@ -135,7 +135,7 @@ point* ioparser_parse_file_to_data_points   (context* c,char* file_name)
     list_destroy(&file_data);
     if(status != c->datapoint_count)
     {
-        vector_destroy(data_vecs,status);
+        vector_destroy(&data_vecs,status);
  		return NULL;	
     }
 	return data_vecs;

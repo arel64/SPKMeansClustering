@@ -126,10 +126,11 @@ void spkmeans_jacobi(matrix* a, matrix* ret[]){
         }
     }
     matrix_transpose(ret_matrix);
-    vector_destroy(&first_vector, 1);
-    vector_destroy(&second_vector, 1);
+    free(first_vector);
+    free(second_vector);
     matrix_destroy(a);
     matrix_destroy(a_next);
     matrix_destroy(temp);
+    matrix_destroy(curr_rotation);
     ret[1] = ret_matrix;
 }

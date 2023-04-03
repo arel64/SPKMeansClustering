@@ -63,11 +63,12 @@ void test_matrix_function(int func,pre_post* p)
         expected_vecs  = ioparser_parse_file_to_data_points   (&c_expected,file_out_name);
         if(expected_vecs == NULL)
         {
-            vector_destroy(computed_vecs, c_expected.datapoint_count);
+            vector_destroy(&computed_vecs, 1);
             CU_FAIL_FATAL();
         }
         n_expected = c_expected.datapoint_count;
         n_computed = c_computed.datapoint_count;
+        CU_ASSERT_EQUAL(n_expected, n_computed);
         switch(func)
         {
             case WAM:
@@ -113,8 +114,8 @@ void test_matrix_function(int func,pre_post* p)
         /*
             This section is horrificly inefficent, but this is a test so... Duck it
         */
-        vector_destroy(expected_vecs, n_expected);
-        vector_destroy(computed_vecs, n_computed);
+        vector_destroy(&expected_vecs, 1);
+        vector_destroy(&computed_vecs, 1);
         CU_ASSERT_EQUAL(matrix_is_equal(computed_matrix,expected_matrix,0.00009),1);
         matrix_destroy(computed_matrix);
         matrix_destroy(expected_matrix);
@@ -152,12 +153,9 @@ void testJACOBI(void)
    m->matrix[2][0] = 2;
    m->matrix[2][1] = 0;
    m->matrix[2][2] = 0;
-
-    matrix_print(m);
    spkmeans_jacobi(m,dual);
-   matrix_print(dual[0]);
-   printf("\n");
-   matrix_print(dual[1]);
+   /*INCOMPLETE*/
+   CU_FAIL_FATAL();
 }
 int testspkmeans_init(void)
 {

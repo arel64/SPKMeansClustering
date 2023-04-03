@@ -20,7 +20,6 @@ void    vector_multipy_vector_by_scalar (vector *, double, const unsigned);
 void    vector_copyinto_vector          (vector *copyInto, const vector*const copyFrom, const unsigned);
 double  vector_multiply                 (vector* vector_row,vector* vector_col, const unsigned);
 void    vector_each_cell                (vector* into,const vector *const left,const vector *const right,const double scalar,unsigned how, const unsigned);
-void    vector_destroy                  (vector *,unsigned);
-void    vector_smart_destroy            (vector* vecArr);
+void    vector_destroy                  (vector **,unsigned);
 
 #endif

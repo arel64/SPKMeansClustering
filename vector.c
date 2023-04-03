@@ -70,18 +70,17 @@ void vector_each_cell(vector* into,const vector *const left,const vector *const 
 		}
     }
 }
-void vector_destroy(vector *vecArr, unsigned int k)
+void vector_destroy(vector **vecArr, unsigned int k)
 {
 	size_t j = 0;
 	if(vecArr == NULL)
 		return;
 	for (; j < k; j++)
 	{
-		free(vecArr[j]);
+		free((*vecArr)[j]);
+		(*vecArr)[j] = NULL;
 	}
-}
-void vector_smart_destroy(vector* vecArr)
-{
-	free(vecArr[0]);
-	free(vecArr);
+	free(*vecArr);
+	*vecArr = NULL;
+
 }
