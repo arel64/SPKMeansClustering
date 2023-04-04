@@ -17,14 +17,17 @@
 #define FILE_OUT_PREFIX_GL "tests_output/C/test"
 #define FILE_OUT_SUFFIX_GL "_gl.txt"
 
+#define ENOUGH_SPACE 255
 #define WAM 0
 #define DDG 1
 #define GL 2
 
-
+/*
+        file_in_name = p->pre_in + str(test_count) + p->post_in
+*/
 void imposeInt(int n,char* out,char* pre,char* post)
 {
-    char test_count_str[255];
+    char test_count_str[ENOUGH_SPACE];
     strcpy(out, pre);
     sprintf(test_count_str, "%d", n);
     strcat(out,test_count_str );
@@ -42,8 +45,8 @@ void test_matrix_function(int func,pre_post* p)
     for(;test_count<TESTSPKMEANS_MAGIC_TEST_NUMBER;test_count++)
     {
        
-        char* file_in_name  = malloc(sizeof(char)*255);
-        char* file_out_name = malloc(sizeof(char)*255);
+        char* file_in_name  = malloc(sizeof(char)*ENOUGH_SPACE);
+        char* file_out_name = malloc(sizeof(char)*ENOUGH_SPACE);
         imposeInt(test_count, file_in_name,p->pre_in,p->post_in);
         if(file_in_name == NULL)
         {

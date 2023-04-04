@@ -166,10 +166,6 @@ static matrix *spkmeansmodule_getCMatrix(PyObject *pyMatrix)
     return ret;
 }
 
-static PyObject *spkmeansmodule_spk(PyObject *self, PyObject *args)
-{
-    return NULL;
-}
 static PyObject *spkmeansmodule_wam(PyObject *self, PyObject *args)
 {
     PyObject *ret;
@@ -220,10 +216,6 @@ static PyObject *spkmeansmodule_jacobi(PyObject *self, PyObject *args)
 
 // module's function table
 static PyMethodDef Spkmeans_FunctionsTable[] = {
-    {"spk",
-     spkmeansmodule_spk,
-     METH_VARARGS,
-     "passing the initial centroids, the datapoints and other arguments if needed, and get the final centroids"},
     {"wam",
      spkmeansmodule_wam,
      METH_VARARGS,
