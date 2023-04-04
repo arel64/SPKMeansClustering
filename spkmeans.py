@@ -3,7 +3,6 @@ import numpy as np
 import csv
 import sys
 import  mykmeanssp
-import kmeans as km
 import math
 
 ERROR_MESSAGE = "An Error Has Occurred"
@@ -106,7 +105,7 @@ if __name__ == "__main__":
                 print(i, end=",")
             print(centroids.index[len(centroids.index) - 1])
 
-            printed_list = km.spk(dataPointList, centroidsList, MAX_ITER, EPS, k)
+            printed_list = mykmeanssp.spk(dataPointList, centroidsList, MAX_ITER, EPS, k)
         
         for row in printed_list:
             for coordinate in row[0: -1]:

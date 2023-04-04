@@ -113,6 +113,7 @@ void test_matrix_function(int func,pre_post* p)
         }
         /*
             This section is horrificly inefficent, but this is a test so... Duck it
+            Quack, Quack!
         */
         vector_destroy(&expected_vecs, 1);
         vector_destroy(&computed_vecs, 1);
