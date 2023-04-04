@@ -17,7 +17,19 @@
 #define FILE_OUT_PREFIX_GL "tests_output/C/test"
 #define FILE_OUT_SUFFIX_GL "_gl.txt"
 
+<<<<<<< Updated upstream
 #define ENOUGH_SPACE 255
+=======
+#define FILE_IN_PREFIX_JACOBI "test_input/test"
+#define FILE_IN_SUFFIX_JACOBI ".txt"
+#define FILE_OUT_PREFIX_JACOBI "tests_output/C/test"
+#define FILE_OUT_SUFFIX_JACOBI "_jacobi.txt"
+
+#define WAM 0
+#define DDG 1
+#define GL 2
+
+>>>>>>> Stashed changes
 
 /*
         file_in_name = p->pre_in + str(test_count) + p->post_in
@@ -139,23 +151,8 @@ void testLP(void)
 }
 void testJACOBI(void)
 {
-   matrix *m;
-   matrix* dual[2] = {NULL,NULL};
-   m = matrix_create(3, 3);
-   m->matrix[0][0] = 0;
-   m->matrix[0][1] = 5;
-   m->matrix[0][2] = 2;
+   pre_post p = {FILE_IN_PREFIX_JACOBI, FILE_IN_SUFFIX_JACOBI, FILE_OUT_PREFIX_JACOBI, FILE_OUT_PREFIX_JACOBI}
 
-   m->matrix[1][0] = 5;
-   m->matrix[1][1] = 0;
-   m->matrix[1][2] = 0;
-
-   m->matrix[2][0] = 2;
-   m->matrix[2][1] = 0;
-   m->matrix[2][2] = 0;
-   spkmeans_jacobi(m,dual);
-   /*INCOMPLETE*/
-   CU_FAIL_FATAL();
 }
 int testspkmeans_init(void)
 {
