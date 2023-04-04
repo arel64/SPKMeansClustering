@@ -12,5 +12,5 @@ int ioparser_parse_data_points              (const  context*const   ,linked_list
 point ioparser_parse_data_point             (const  context*const   ,char *);
 void ioparser_print_final_centroids         (const  context*const   ,const centroid *);
 point* ioparser_parse_file_to_data_points   (context*,char* filename);
-int ioparser_get_dimention                  (const char* unparsed_line);
+int ioparser_get_dimention                  (const char* unparsed_line, ssize_t nnread_prev);
 #endif

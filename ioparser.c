@@ -4,11 +4,12 @@ int ioparser_parse_file_linked_list(context* c,linked_list *l, FILE *stream)
     char *datapoint_line = NULL;
     size_t lines_read = 0;
 	size_t length = 0;
-	ssize_t nread;
+	ssize_t nread, nread_prev;
 	while ((nread = getline(&datapoint_line, &length, stream)) != EOF)
 	
 	{
 		char *temp = (char *)malloc(sizeof(char) * nread);
+		nread_prev = nread;
 		if (temp == NULL)
 		{
 			return 1;
@@ -22,7 +23,7 @@ int ioparser_parse_file_linked_list(context* c,linked_list *l, FILE *stream)
 		lines_read++;
 	}
 	free(datapoint_line);
-    c->dimention = ioparser_get_dimention(l->head->key);
+    c->dimention = ioparser_get_dimention(l->head->key, nread_prev);
     c->datapoint_count = lines_read;
 	return 0;
 }
@@ -59,6 +60,10 @@ point ioparser_parse_data_point(const context*const c,char *line)
 	}
 	while (endI == NULL || (*endI != EOF && *endI != '\n'))
 	{
+		if(i == c->dimention)
+		{
+			return NULL;
+		}
 		ret[i] = strtod(line, &endI);
 		line += (endI - line) + 1;
 		i++;
@@ -83,11 +88,11 @@ void ioparser_print_final_centroids(const context*const c,const centroid * final
 	}
 }
 
-int ioparser_get_dimention(const char* unparsed_line)
+int ioparser_get_dimention(const char* unparsed_line, ssize_t nread)
 {
 	int i = 0;
 	int count = 0; /*counting of the char ',' in the given string.*/
-	while((*(unparsed_line + i) != '\n') && (*(unparsed_line + i) != EOF)){
+	while(i < nread){
 		if(*(unparsed_line + i) == ',')
 			count++;
 		i++;
