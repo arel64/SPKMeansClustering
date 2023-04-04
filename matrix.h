@@ -25,7 +25,7 @@ typedef struct{
 
 
 matrix* matrix_create(const unsigned row,const unsigned col);
-matrix* matrix_create_from_data(const unsigned row,const unsigned col,double** data);
+matrix* matrix_create_from_data(const unsigned row,const unsigned col,double* data[] );
 matrix* matrix_add(const matrix *const left, const matrix*const right);
 matrix* matrix_subtract(const matrix *const left, const matrix*const right);
 matrix* matrix_multiply(const matrix *const left, const matrix*const right);

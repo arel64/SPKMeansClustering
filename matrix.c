@@ -21,7 +21,7 @@ matrix* matrix_create(const unsigned row,const unsigned col)
         ret->matrix[i] = alloc + col*i;
     return  ret;
 }
-matrix* matrix_create_from_data(const unsigned row,const unsigned col,double** data)
+matrix* matrix_create_from_data(const unsigned row,const unsigned col,double* data[])
 {
     matrix* m = matrix_create(row,col);
     size_t i = 0,j = 0;
