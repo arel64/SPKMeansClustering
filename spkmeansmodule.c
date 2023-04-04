@@ -1,5 +1,22 @@
-#include "spkmeansmodule.h"
+#define PY_SSIZE_T_CLEAN
+#include <Python.h>
+#include "spkmeans.h"
 
+static vector   *spkmeansmodule_getDataPoints(PyObject*pyDataPoints, context* c);
+
+static int spkmeansmodule_isListOfLists(PyObject *dataPointsPy);
+static vector *spkmeansmodule_getDataPoints(PyObject *pyDataPoints, context *c);
+static matrix *spkmeansmodule_getCMatrix(PyObject *pyMatrix);
+
+
+static PyObject *spkmeansmodule_wam(PyObject *self, PyObject *args);
+static PyObject *spkmeansmodule_ddg(PyObject *self, PyObject *args);
+static PyObject *spkmeansmodule_gl(PyObject *self, PyObject *args);
+static PyObject *spkmeansmodule_jacobi(PyObject *self, PyObject *args);
+static PyObject *spkmeansmodule_getPyMatrix(matrix* m);
+
+static PyObject *spkmeansmodule_reverseSwitch(PyObject *args, int how);
+static PyObject *spkmeansmodule_getPyMatrix(matrix *m);
 static PyObject *spkmeansmodule_reverseSwitch(PyObject *args, int how)
 {
     vector *vecs;
@@ -165,7 +182,6 @@ static matrix *spkmeansmodule_getCMatrix(PyObject *pyMatrix)
     free(c);
     return ret;
 }
-
 static PyObject *spkmeansmodule_wam(PyObject *self, PyObject *args)
 {
     PyObject *ret;

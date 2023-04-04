@@ -1,6 +1,5 @@
-#include "spkmeans.h"
-#include "matrix.h"
 
+#include "spkmeans.h"
 
 matrix* spkmeans_wam(const  context*const c,const point* const data_points)
 {
@@ -134,3 +133,4 @@ void spkmeans_jacobi(matrix* a, matrix* ret[]){
     matrix_destroy(curr_rotation);
     ret[1] = ret_matrix;
 }
+

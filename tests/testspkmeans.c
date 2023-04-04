@@ -18,9 +18,6 @@
 #define FILE_OUT_SUFFIX_GL "_gl.txt"
 
 #define ENOUGH_SPACE 255
-#define WAM 0
-#define DDG 1
-#define GL 2
 
 /*
         file_in_name = p->pre_in + str(test_count) + p->post_in

@@ -3,10 +3,10 @@
 #include "ioparser.h"
 #include "cleanup.h"
 
-#define WAM "wam"
-#define DDG "ddg"
-#define GL "gl"
-#define JACOBI "jacobi"
+#define WAM_TXT "wam"
+#define DDG_TXT "ddg"
+#define GL_TXT "gl"
+#define JACOBI_TXT "jacobi"
 
 
 int main(int argc, char **argv)
@@ -34,7 +34,7 @@ int main(int argc, char **argv)
         ERROR_AND_EXIT();
     }
     
-    if(strcmp(goal,JACOBI) == 0)
+    if(strcmp(goal,JACOBI_TXT) == 0)
     {
         size_t i = 0;
         size_t j = 0;
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
         {
             ERROR_AND_EXIT();
         }
-        if(strcmp(goal,WAM) == 0)
+        if(strcmp(goal,WAM_TXT) == 0)
         {
             matrix_print(wam);
             matrix_destroy(wam);
@@ -78,7 +78,7 @@ int main(int argc, char **argv)
             matrix_destroy(wam);
             ERROR_AND_EXIT();
         }
-        if(strcmp(goal,DDG) == 0)
+        if(strcmp(goal,DDG_TXT) == 0)
         {    
             matrix_print(ddg);
             matrix_destroy(wam);
@@ -94,7 +94,7 @@ int main(int argc, char **argv)
         {
             ERROR_AND_EXIT();
         }
-        if(strcmp(goal,GL) == 0)
+        if(strcmp(goal,GL_TXT) == 0)
         {
             matrix_print(gl);
             matrix_destroy(gl);
