@@ -17,20 +17,12 @@
 #define FILE_OUT_PREFIX_GL "tests_output/C/test"
 #define FILE_OUT_SUFFIX_GL "_gl.txt"
 
-<<<<<<< Updated upstream
-#define ENOUGH_SPACE 255
-=======
 #define FILE_IN_PREFIX_JACOBI "test_input/test"
 #define FILE_IN_SUFFIX_JACOBI ".txt"
 #define FILE_OUT_PREFIX_JACOBI "tests_output/C/test"
 #define FILE_OUT_SUFFIX_JACOBI "_jacobi.txt"
 
-#define WAM 0
-#define DDG 1
-#define GL 2
-
->>>>>>> Stashed changes
-
+#define ENOUGH_SPACE 255
 /*
         file_in_name = p->pre_in + str(test_count) + p->post_in
 */
@@ -151,7 +143,46 @@ void testLP(void)
 }
 void testJACOBI(void)
 {
-   pre_post p = {FILE_IN_PREFIX_JACOBI, FILE_IN_SUFFIX_JACOBI, FILE_OUT_PREFIX_JACOBI, FILE_OUT_PREFIX_JACOBI}
+
+    matrix* output [2];
+    double **data_ptr;
+    int i;
+    matrix* input;
+    /*
+        We will test edge case where eigenvector is -0 which causes the vector to flip
+    */
+    double data[3][3] = {{1, 2, -3},
+                     {2, 4, -6},
+                     {-3, -6, -9}};
+
+    data_ptr = malloc(3 * sizeof(double *));
+    for ( i = 0; i < 3; i++) {
+        data_ptr[i] = data[i];
+    }
+
+
+    input = matrix_create_from_data(3,3,data_ptr);
+    spkmeans_jacobi(input, output);
+
+    /*
+        Check eigenvalues 
+    */
+    CU_ASSERT_DOUBLE_EQUAL(output[0]->matrix[0][0], 0.0,0.0001);
+    CU_ASSERT_DOUBLE_EQUAL(output[0]->matrix[0][1], 7.69535,0.0001);
+    CU_ASSERT_DOUBLE_EQUAL(output[0]->matrix[0][2], -11.6954,0.0001);
+    CU_ASSERT_TRUE(output[0]->matrix[0][0] > 0.0);
+    /*
+        Check that vector has correct direction 
+    */
+    CU_ASSERT_DOUBLE_EQUAL(output[1]->matrix[0][0], 0.8944,0.0001);
+    CU_ASSERT_DOUBLE_EQUAL(output[1]->matrix[1][0], -0.4472,0.0001);
+    CU_ASSERT_DOUBLE_EQUAL(output[1]->matrix[2][0], 0.0000,0.0001);
+    /*
+        Check for correct orientation
+    */
+    CU_ASSERT_TRUE(output[1]->matrix[0][0]<0);
+    CU_ASSERT_TRUE(output[1]->matrix[1][0]>0);
+    CU_ASSERT_TRUE(output[1]->matrix[2][0]>0);
 
 }
 int testspkmeans_init(void)
