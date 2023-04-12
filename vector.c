@@ -1,4 +1,5 @@
 #include "vector.h"
+#include <math.h>
 
 int vector_init_arr(point* arr, const unsigned k,const unsigned dim){
 	size_t i;
@@ -30,6 +31,11 @@ void vector_multipy_vector_by_scalar   (point *vec, double scalar, const unsigne
 {
 	vector_each_cell(vec,vec,NULL,scalar,MULTIPLY_SCALAR,n);
 }
+void    vector_fabs                     (vector *vec, const unsigned n)
+{
+	vector_each_cell(vec,vec,NULL,0,FABS,n);
+}
+
 double  vector_multiply (vector* vector_row,vector* vector_col, const unsigned dim)
 {
 	size_t i = 0;
@@ -63,6 +69,9 @@ void vector_each_cell(vector* into,const vector *const left,const vector *const 
 			break;
 		case COPYINTO_VECTOR:
 			(*into)[i] = (*left)[i];
+			break;
+		case FABS:
+			(*into)[i] = fabs((*left)[i]);
 			break;
 		default:
 			return;

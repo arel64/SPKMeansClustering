@@ -1,5 +1,7 @@
 
 #include "spkmeans.h"
+#include "vector.h"
+#include <math.h>
 
 matrix* spkmeans_wam(const  context*const c,const point* const data_points)
 {
@@ -121,7 +123,8 @@ void spkmeans_jacobi(matrix* a, matrix* ret[]){
     {
         if (ZERO_DIFFERENTIATOR(ret[0]->matrix[0][p]))
         {
-            vector_multipy_vector_by_scalar(&ret_matrix->matrix[p], -1, a->col);
+            vector_fabs(&ret_matrix->matrix[p],a->col);
+            ret[0]->matrix[0][p] = fabs(ret[0]->matrix[0][p]);
         }
     }
     matrix_transpose(ret_matrix);
