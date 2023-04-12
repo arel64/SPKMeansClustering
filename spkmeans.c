@@ -123,7 +123,7 @@ void spkmeans_jacobi(matrix* a, matrix* ret[]){
     {
         if (ZERO_DIFFERENTIATOR(ret[0]->matrix[0][p]))
         {
-            vector_fabs(&ret_matrix->matrix[p],a->col);
+            vector_multipy_vector_by_scalar(&ret_matrix->matrix[p],-1,a->col);
             ret[0]->matrix[0][p] = fabs(ret[0]->matrix[0][p]);
         }
     }
