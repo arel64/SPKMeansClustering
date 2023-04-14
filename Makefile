@@ -22,7 +22,7 @@ DEPS := $(OBJS:.o=.d)
 INC_FLAGS := -I/usr/include/python3
 # The -MMD and -MP flags together generate Makefiles for us!
 # These files will have .d instead of .o as the output.
-LDFLAGS := $(INC_FLAGS) -MMD -MP -lm -lcunit
+LDFLAGS := $(INC_FLAGS) -MMD -MP -lm
 
 
 

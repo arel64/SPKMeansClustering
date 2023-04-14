@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import csv
 import sys
-import  mykmeanssp
+import mykmeanssp
 import math
 
 ERROR_MESSAGE = "An Error Has Occurred"
@@ -41,7 +41,7 @@ def find_huristic(first_row):
 if __name__ == "__main__":
     try:
         np.random.seed(0)
-        
+
         goal = sys.argv[ARGV_LEN - 2]
         data_file = sys.argv[ARGV_LEN - 1]
 
@@ -50,9 +50,7 @@ if __name__ == "__main__":
         dim = get_csv_datapoint_dimention(data_file)
         column_names = get_dimentional_col(dim)
         data_file_df = pd.read_csv(data_file, names=column_names)
-        points_series = data_file_df.apply(lambda s: s.to_numpy(), axis=1)
-        points_list = [[j for j in i] for i in points_series]
-
+        points_list = [[point for point in series] for series in data_file_df.values]
         # File processing done, only point_list is relevent for the next parts.
 
         if goal != SPK:
@@ -112,5 +110,5 @@ if __name__ == "__main__":
                 print(f'{coordinate:.4f}', end= ',')
             print(f'{row[-1]:.4f}')
     
-    except Exception:
+    except Exception as e:
         print(ERROR_MESSAGE)
