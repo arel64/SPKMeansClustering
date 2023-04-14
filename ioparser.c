@@ -4,7 +4,7 @@ int ioparser_parse_file_linked_list(context* c,linked_list *l, FILE *stream)
     char *datapoint_line = NULL;
     size_t lines_read = 0;
 	size_t length = 0;
-	ssize_t nread, nread_prev;
+	ssize_t nread, nread_prev = 0 ;
 	while ((nread = getline(&datapoint_line, &length, stream)) != EOF)
 	
 	{

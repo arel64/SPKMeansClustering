@@ -4,7 +4,7 @@ CC := gcc
 BUILD_DIR := ./build
 SRC_DIRS := ./
 SRC_DIRS_EXCLUDE := $(SRC_DIRS) -name '*.c' ! -name '*module.c' ! -path "./tests/*"
-CFLAGS := -ansi -Wall -Wextra -Werror -pedantic-errors -g
+CFLAGS := -ansi -Wall -Wextra -Werror -pedantic-errors -O3
 # Find all the C and C++ files we want to compile
 # Note the single quotes around the * expressions. Make will incorrectly expand these otherwise.
 SRCS := $(shell find $(SRC_DIRS_EXCLUDE))
@@ -19,7 +19,7 @@ DEPS := $(OBJS:.o=.d)
 #INC_DIRS := $(shell find $(INC_DIRS) -type d)
 # Add a prefix to INC_DIRS. So moduleA would become -ImoduleA. GCC understands this -I flag
 #INC_FLAGS := $(addprefix -I,$(INC_DIRS))
-INC_FLAGS := -I/usr/include/python3.7
+INC_FLAGS := -I/usr/include/python3
 # The -MMD and -MP flags together generate Makefiles for us!
 # These files will have .d instead of .o as the output.
 LDFLAGS := $(INC_FLAGS) -MMD -MP -lm -lcunit

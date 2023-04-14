@@ -1,13 +1,21 @@
 #ifndef SPKMEANS
 #define SPKMEANS
-
-#include "matrix.h"
 #include <stdbool.h>
+#include "matrix.h"
+#include "ioparser.h"
+#include "cleanup.h"
+
 #include <math.h>
 
 #define WAM 101
 #define DDG 201
 #define GL 301
+
+#define WAM_TXT "wam"
+#define DDG_TXT "ddg"
+#define GL_TXT "gl"
+#define JACOBI_TXT "jacobi"
+
 #define SPKMEANS_WAM_FORMULA(x,y,dim) (exp(-0.5*pow(vector_euclidean_distance(x,y,dim),2)))
 #define SPKMEANS_THETA_FORMULA(m, loc) ((a->matrix[loc[1]][loc[1]] - a->matrix[loc[0]][loc[0]]) / (2 * a->matrix[loc[0]][loc[1]]))
 #define SPKMEANS_SIGN(theta) (theta >= 0 ? 1 : -1)

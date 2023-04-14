@@ -191,3 +191,5 @@ spkmeans
 TESTspkmeans
 compare_results.py
 tests/test
+./runtest.py
+./runtests.py

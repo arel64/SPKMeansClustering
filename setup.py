@@ -3,11 +3,13 @@ from setuptools import Extension, setup
 #May be needed to define a cap.h file to work.
 module = Extension("mykmeanssp", 
                    sources=[
-                        'spkmeans.c',
-                        'spkmeansmodule.c',
-                        'matrix.c',
+                        'linked_list.c',
                         'vector.c',
-                        'kmeanslib.c'
+                        'matrix.c',
+                        'ioparser.c',
+                        'spkmeans.c',
+                        'kmeanslib.c',
+                        'spkmeansmodule.c'
                    ])
 setup(name='mykmeanssp',
       version='1.0',
